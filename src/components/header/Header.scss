@@ -1,0 +1,42 @@
+nav {
+  background-color: #fff;
+  height: 75px;
+
+  a {
+    height: 100%;
+
+    .logo-text {
+      width: 156px;
+      font-size: 20px;
+      font-family: "Montserrat-medium";
+      color: #ff9aa1;
+      margin-left: 5.5px;
+    }
+    .logo {
+      width: 70px;
+      height: 70px;
+      margin-left: 14.5px;
+      object-fit: contain;
+    }
+  }
+
+  #nav-mobile {
+    height: 100%;
+
+    .connexion-link {
+      transition: color 0.2s ease;
+      color: #454545;
+      font-family: "Montserrat-medium";
+      margin-right: 24px;
+      font-size: 15px;
+    }
+  }
+
+  ul a:hover {
+    background-color: initial;
+  }
+
+  #nav-mobile li:hover .connexion-link {
+    color: #ff9aa1;
+  }
+}
