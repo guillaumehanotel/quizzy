@@ -9,18 +9,21 @@ import {
 import './AppLayout.scss';
 import Header from './header/Header';
 import Home from '../pages/home/Home';
+import { StoreProvider } from '../storeProvider';
 
 const AppLayout: React.FC = () => {
   return (
     <Router>
-      <div id="main-content">
-        <Header/>
-        <Switch>
-          <Route exact path="/">
-            <Home/>
-          </Route>
-        </Switch>
-      </div>
+      <StoreProvider>
+        <div id="main-content">
+          <Header />
+          <Switch>
+            <Route exact path="/">
+              <Home />
+            </Route>
+          </Switch>
+        </div>
+      </StoreProvider>
     </Router>
   );
 }
