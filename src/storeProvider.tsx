@@ -43,7 +43,7 @@ export const StoreProvider: React.ComponentType = ({ children }) => {
       </stateCtx.Provider>
     </dispatchCtx.Provider>
   );
-}
+};
 
 export const useGlobalState = () => useContext(stateCtx);
 

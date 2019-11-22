@@ -1,0 +1,36 @@
+.auth-container {
+
+  border-radius: 10px;
+  background-color: white;
+  padding-bottom: 40px;
+
+  h1 {
+    padding-top: 30px;
+    color: #FF9AA1;
+    font-size: 45px;
+  }
+
+  span[id^=not_signed_]:before {
+    content: 'Continuer avec Google';
+    padding-right:20px;
+  }
+
+  span[id^=connected]:before {
+    content: 'Connecté avec Google';
+    padding-right:20px;
+  }
+
+  .google-button{
+    margin-top: 50px;
+    width: 100%;
+  }
+
+  .google-button > div{
+    margin: 0 auto;
+  }
+
+  .auth-choose-button {
+    padding-top: 30px;
+  }
+
+}
