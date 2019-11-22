@@ -1,21 +1,63 @@
 .login-container {
-
-  border-radius: 10px;
+  border-radius: 12px;
   background-color: white;
-  padding-bottom: 40px;
+  width: 90%;
+  margin-top: 70px;
 
   h1 {
-    padding-top: 30px;
-    color: #FF9AA1;
-    font-size: 45px;
+    color: #ff9aa1;
+    font-size: 25px;
   }
 
   .cancel-button {
-    background-color: #FF9AA1;
+    background-color: #ff9aa1;
   }
 
   .register-link {
     height: 36px;
   }
 
+  .input-field {
+    input {
+      border: none;
+      height: 45px;
+      border-radius: 6px;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-family: "Montserrat", sans-serif;
+    }
+
+    input:focus {
+      outline: #ff9aa1 auto 3px;
+    }
+
+    .password-toggler {
+      position: absolute;
+      height: 30px;
+      width: 30px;
+      top: 50%;
+      right: 8%;
+      transform: translate(0, -50%);
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .btn {
+    border-radius: 6px;
+    width: 100%;
+  }
+
+  //Google button
+  .google-connect {
+    button {
+      width: 100%!important;
+
+      span {
+        padding-left: 10px!important;
+      }
+    }
+  }
 }

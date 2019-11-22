@@ -23,6 +23,7 @@ const AppLayout: React.FC = () => {
 
                     <Switch>
                         <Route exact path="/"><Home/></Route>
+                        <Route exact path="/login"><Login/></Route>
                         <Route exact path="/auth"><AuthChoose/></Route>
                         <Route exact path="/auth/login"><Login/></Route>
                         <Route exact path="/auth/register"><Register/></Route>

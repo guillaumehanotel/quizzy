@@ -8,7 +8,8 @@ type Action = { type: string; payload?: any; }
 const defaultState = {
   isLogged: false,
   loading: false,
-  error: false
+  error: false,
+  user: null
 };
 
 function reducer(state: State = defaultState, action: Action) {
@@ -16,15 +17,13 @@ function reducer(state: State = defaultState, action: Action) {
     case actions.LOGIN:
       return { ...state, loading: true, error: false };
     case actions.LOGIN_SUCCESS:
-      return { ...state, loading: false, isLogged: true, error: false };
+      localStorage.setItem('user', JSON.stringify(action.payload));
+      return { ...state, loading: false, isLogged: true, error: false, user: action.payload };
     case actions.LOGIN_FAILURE:
       return { ...state, loading: false, error: true };
     case actions.LOGOUT:
-      return { ...state, loading: true, error: false };
-    case actions.LOGOUT_SUCCESS:
-      return { ...state, loading: false, isLogged: false, error: false };
-    case actions.LOGOUT_FAILURE:
-      return { ...state, loading: false, error: true };
+        localStorage.removeItem('user');
+        return { ...state, loading: false, isLogged: false, error: false, user: null };
     default:
       return state;
   }

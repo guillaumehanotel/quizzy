@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './Login.scss'
 import useForm from "react-hook-form";
-import {Link} from "react-router-dom";
-import {loginUser} from "../../../utils/requests";
+import { Link } from "react-router-dom";
+import { loginUser } from "../../../utils/requests";
+import * as env from '../../../config/env';
+import * as actions from '../../../config/actions';
+import GoogleLogin from 'react-google-login';
+import { User } from '../../../models/User';
+import { useStore } from '../../../storeProvider';
 
 
 const Login: React.FC = () => {
 
-    const {handleSubmit, register, errors} = useForm();
+    const [isPasswordVisible, togglePasswordVisibility] = useState(false);
+    const { handleSubmit, register, errors } = useForm();
+    const dispatch = useStore();
 
     const onSubmit = async (values: any) => {
         const response = await loginUser(values);
@@ -17,43 +24,72 @@ const Login: React.FC = () => {
         console.log(bearerToken);
     };
 
+    const onLoginSuccess = (response: any) => {
+        const googleUser = response['profileObj']
+        const user: User = { email: googleUser['email'], name: googleUser['name'], googleId: googleUser['googleId'] }
+        dispatch({type: actions.LOGIN_SUCCESS, payload: user})
+    };
+
+    const onLoginFailed = (err: any) => {
+        console.log('Login failed', err);
+    };
 
     return (
-        <div className={"container login-container"}>
+        <div className={"login-container valign-wrapper m-auto z-depth-1"}>
+            <div className={"full-width"}>
+                <h1 className={"center-align w500"}>Se Connecter</h1>
 
-            <h1 className={"center-align"}>Se Connecter</h1>
+                <div className="row">
+                    <form className="col s12" onSubmit={handleSubmit(onSubmit)}>
+                        <div className="row">
+                            <div className="col s3 m-auto input-field float-none">
+                                <input placeholder="Email" name="email" type="text" className="z-depth-1 browser-default full-width"
+                                    ref={register({
+                                        required: 'Required',
+                                        pattern: {
+                                            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                                            message: "invalid email address"
+                                        }
+                                    })} />
+                            </div>
+                        </div>
 
-            <div className="row">
-                <form className="col s12" onSubmit={handleSubmit(onSubmit)}>
+                        <div className="row">
+                            <div className="col s3 m-auto input-field float-none">
+                                <input placeholder="Mot de passe" name="password" type={isPasswordVisible ? "text" : "password"} className="z-depth-1 browser-default full-width"
+                                    ref={register({
+                                        required: 'Required',
+                                    })} />
+                                <img onClick={() => togglePasswordVisibility(!isPasswordVisible)} className={"password-toggler"} src="./assets/view.png" />
+                            </div>
+                        </div>
 
-                    <div className="input-field col s8 offset-s2 m4 offset-m4">
-                        <input placeholder="Email" name="email" type="text" className="validate"
-                               ref={register({
-                                   required: 'Required',
-                                   pattern: {
-                                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                                       message: "invalid email address"
-                                   }
-                               })}/>
+                        <div className="row">
+                            <div className="col s3 m-auto float-none">
+                                <div className="row">
+                                    <div className="col s4">
+                                        <button className="btn quizzy-blue" type="submit" name="action">Valider</button>
+                                    </div>
+                                    <div className="col s8 valign-wrapper register-link">
+                                        <Link to="/register">Pas encore de compte ?</Link>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         {errors.email && errors.email.message}
-                    </div>
+                    </form>
 
-                    <div className="input-field col s8 offset-s2 m4 offset-m4">
-                        <input placeholder="Mot de passe" name="password" type="password" className="validate"
-                               ref={register({
-                                   required: 'Required',
-                               })}/>
-                        {errors.password && errors.password.message}
+                    <div className="row">
+                        <div className="col s3 m-auto float-none center-align google-connect">
+                            <GoogleLogin
+                                clientId={env.GOOGLE_CLIENT_ID}
+                                buttonText="Se connecter avec Google"
+                                onSuccess={onLoginSuccess}
+                                onFailure={onLoginFailed}
+                            />
+                        </div>
                     </div>
-
-                    <div className="input-field col s6 right-align">
-                        <button className="btn blue" type="submit" name="action">Valider</button>
-                    </div>
-                    <div className="input-field col s6 valign-wrapper register-link">
-                        <Link to="/auth/register">Pas encore de compte ?</Link>
-                    </div>
-
-                </form>
+                </div>
             </div>
 
         </div>
