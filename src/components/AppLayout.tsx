@@ -11,6 +11,7 @@ import Home from '../pages/home/Home';
 import {StoreProvider} from '../storeProvider';
 import Login from "../pages/auth/login/Login";
 import Register from "../pages/auth/register/Register";
+import Room from "../pages/room/Room";
 
 const AppLayout: React.FC = () => {
     return (
@@ -23,6 +24,7 @@ const AppLayout: React.FC = () => {
                         <Route exact path="/"><Home/></Route>
                         <Route exact path="/login"><Login/></Route>
                         <Route exact path="/register"><Register/></Route>
+                        <Route exact path="/room/:id"><Room/></Route>
                     </Switch>
 
                 </div>
