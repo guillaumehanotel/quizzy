@@ -15,6 +15,13 @@ const Header: React.FC = () => {
         dispatch({type: LOGIN_SUCCESS, payload: {user, token}})
     };
 
+    useEffect(() => {
+        if (state.token === null && state.user === null) {
+            if (localStorageToken !== null && localStorageToken !== 'undefined') {
+                fetchUser(localStorageToken);
+            }
+        }
+    }, [localStorageToken]);
     const logout = async () => {
         localStorage.clear();
         if (state.token !== null) {
@@ -23,14 +30,6 @@ const Header: React.FC = () => {
         }
         dispatch({type: LOGOUT})
     };
-
-    useEffect(() => {
-        if (state.token === null && state.user === null) {
-            if (localStorageToken !== null && localStorageToken !== 'undefined') {
-                fetchUser(localStorageToken);
-            }
-        }
-    }, [localStorageToken]);
 
     return (
         <nav className="z-depth-1">
