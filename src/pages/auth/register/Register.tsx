@@ -1,19 +1,29 @@
 import React from 'react';
 import './Register.scss'
 import useForm from "react-hook-form";
+import * as actions from '../../../config/actions';
 import {registerUser} from "../../../utils/requests";
+import {FormValidationError} from "../../../utils/errors";
+import {useStore} from "../../../storeProvider";
+import {useHistory} from "react-router";
 
 
 const Register: React.FC = () => {
 
-    const {handleSubmit, register, errors} = useForm();
+    const history = useHistory();
+    const {handleSubmit, register, errors, setError} = useForm();
+    const dispatch = useStore();
 
     const onSubmit = async (values: any) => {
-        const response = await registerUser(values);
-        const user = response.data;
-        const bearerToken = response.meta.access_token;
-        console.log(user);
-        console.log(bearerToken);
+        try {
+            const {user, token} = await registerUser(values);
+            dispatch({type: actions.LOGIN_SUCCESS, payload: {user, token}});
+            history.push('/');
+        } catch (e) {
+            if (e instanceof FormValidationError) {
+                setError(e.getErrors())
+            }
+        }
     };
 
     return (

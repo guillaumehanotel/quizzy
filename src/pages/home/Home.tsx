@@ -1,11 +1,10 @@
-import React, { useReducer } from 'react';
+import React from 'react';
 import './Home.scss'
-import { useStore, useGlobalState } from '../../storeProvider';
-import * as actions from '../../config/actions'
+// import { useStore, useGlobalState } from '../../storeProvider';
 
 const Home: React.FC = () => {
-    const dispatch = useStore();
-    const state = useGlobalState();
+    // const dispatch = useStore();
+    // const state = useGlobalState();
 
     return (
         <div>
