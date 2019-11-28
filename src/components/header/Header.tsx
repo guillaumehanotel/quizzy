@@ -45,7 +45,7 @@ const Header: React.FC = () => {
       <div className="nav-wrapper">
         <Link to={ROUTES.HOME} className="left">
           <div className="valign-wrapper">
-            <img src="assets/quizzy.png" className="logo" alt="quizzy logo" />
+            <img src="/assets/quizzy.png" className="logo" alt="quizzy logo" />
             <span className="logo-text w500">QUIZZY</span>
           </div>
         </Link>
