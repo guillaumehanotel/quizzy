@@ -72,3 +72,12 @@ export async function storeUser(user: User): Promise<any> {
         handleApiErrors(response);
     }
 }
+
+export async function fetchGenres() {
+    const response = await apiRequest(API_URL + 'genres', 'GET');
+    if (response.status_code === 200) {
+        return response.data;
+    } else {
+        handleApiErrors(response);
+    }
+}

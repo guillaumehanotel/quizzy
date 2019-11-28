@@ -1,0 +1,52 @@
+.genres-container {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-around;
+
+  .genre-item {
+    cursor: pointer;
+    border-radius: 10px;
+    height: 180px;
+
+    img {
+      border-radius: 10px;
+    }
+
+    p {
+      font-size: 25px;
+      font-weight: bold;
+      color: white;
+      text-align: center;
+
+      position: relative;
+      bottom: 120px;
+    }
+  }
+}
+
+.modal-buttons {
+  margin-top: 50px;
+  display: flex;
+  flex-wrap: wrap;
+
+  .btn {
+    border-radius: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    height: auto;
+    min-height: 20px;
+    line-height: 20px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    width: 250px;
+    font-weight: bold;
+  }
+
+  .btn-public {
+    background-color: #ff9aa1;
+  }
+}
+
+
