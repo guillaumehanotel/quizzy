@@ -14,6 +14,7 @@ import { StoreProvider, useGlobalState } from '../storeProvider';
 import Login from "../pages/auth/login/Login";
 import Register from "../pages/auth/register/Register";
 import Game from "../pages/game/Game";
+import Stats from '../pages/stats/Stats';
 
 const AppLayout: React.FC = () => {
     const state = useGlobalState();
@@ -27,19 +28,24 @@ const AppLayout: React.FC = () => {
                     <Switch>
                         <Route exact path={ROUTES.HOME}><Home /></Route>
                         <Route exact path={ROUTES.LOGIN} render={() =>
-                            localStorage.getItem('token') ? (
-                                <Redirect to={{ pathname: "/" }} />
-                            ) : <Login />
+                            localStorage.getItem('token')
+                                ? <Redirect to={{ pathname: "/" }} />
+                                : <Login />
                         }
                         />
                         <Route exact path={ROUTES.REGISTER} render={() =>
-                            localStorage.getItem('user') ? (
-                                <Redirect to={{ pathname: "/" }} />
-                            ) : <Register />
+                            localStorage.getItem('token')
+                                ? <Redirect to={{ pathname: "/" }} />
+                                : <Register />
                         }
                         />
                         <Route exact path={ROUTES.GAME}><Game/></Route>
-                        <Route exact path={ROUTES.STATS}><Home/></Route>
+                        <Route exact path={ROUTES.STATS} render={() =>
+                            !localStorage.getItem('token')
+                                ? <Redirect to={{ pathname: "/" }} />
+                                : <Stats/>
+                        }
+                        />
                     </Switch>
 
                 </div>
