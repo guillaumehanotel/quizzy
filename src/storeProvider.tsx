@@ -22,8 +22,8 @@ function reducer(state: State = defaultState, action: Action) {
     case actions.LOGIN_FAILURE:
       return { ...state, loading: false, error: true };
     case actions.LOGOUT:
-        localStorage.removeItem('user');
-        return { ...state, loading: false, isLogged: false, error: false, user: null };
+      localStorage.removeItem('user');
+      return { ...state, loading: false, isLogged: false, error: false, user: null };
     default:
       return state;
   }

@@ -17,7 +17,7 @@ const Header: React.FC = () => {
         dispatch({ type: LOGIN_SUCCESS, payload: user })
       }
     }
-  })
+  }, [])
 
   return (
     <nav className="z-depth-1">
@@ -36,11 +36,11 @@ const Header: React.FC = () => {
           </li>
           {state.isLogged ?
             <li>
-              <Link to={"/"} onClick={() => dispatch({type: LOGOUT})}>
+              <Link to={"/"} onClick={() => dispatch({ type: LOGOUT })}>
                 <span className="connexion-link w500">Déconnexion</span>
               </Link>
             </li>
-          : null}
+            : null}
         </ul>
       </div>
     </nav>
