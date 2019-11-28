@@ -35,12 +35,12 @@ const Home: React.FC = () => {
         <div>
             <p>Choisissez un thème parmi ceux proposés</p>
             <div className={"genres-container"}>
-                {genres.map(genre => (
+                {genres ? genres.map(genre => (
                     <div className={"genre-item"} key={genre.id} onClick={() => openModal(genre.id)}>
                         <img src={genre.picture_url} alt="" height={150} width={250}/>
                         <p>{genre.name}</p>
                     </div>
-                ))}
+                )) : <p>No Genres found</p>}
             </div>
             <Modal
                 isOpen={modalIsOpen}
