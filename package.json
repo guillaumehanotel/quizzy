@@ -8,6 +8,7 @@
     "@types/react": "^16.9.11",
     "@types/react-dom": "16.9.4",
     "@types/react-router-dom": "^5.1.2",
+    "@types/react-modal": "^3.10.0",
     "@typescript-eslint/eslint-plugin": "^2.9.0",
     "@typescript-eslint/parser": "^2.9.0",
     "materialize-css": "^1.0.0-rc.2",
@@ -43,7 +44,6 @@
     ]
   },
   "devDependencies": {
-    "@types/react-modal": "^3.10.0",
     "eslint": "^6.7.1",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-plugin-import": "^2.18.2",
