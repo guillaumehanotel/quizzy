@@ -8,7 +8,6 @@ import {
 } from 'react-router-dom';
 import {ROUTES} from "../config/routes";
 import './AppLayout.scss';
-import {StoreProvider} from '../storeProvider';
 import Header from './header/Header';
 import Home from '../pages/home/Home';
 import { StoreProvider, useGlobalState } from '../storeProvider';
