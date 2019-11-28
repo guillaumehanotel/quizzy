@@ -3,15 +3,16 @@ import 'materialize-css/dist/css/materialize.min.css';
 import {
     BrowserRouter as Router,
     Switch,
-    Route
+    Route,
 } from 'react-router-dom';
+import {ROUTES} from "../config/routes";
 import './AppLayout.scss';
+import {StoreProvider} from '../storeProvider';
 import Header from './header/Header';
 import Home from '../pages/home/Home';
-import {StoreProvider} from '../storeProvider';
 import Login from "../pages/auth/login/Login";
 import Register from "../pages/auth/register/Register";
-import Room from "../pages/room/Room";
+import Game from "../pages/game/Game";
 
 const AppLayout: React.FC = () => {
     return (
@@ -21,10 +22,11 @@ const AppLayout: React.FC = () => {
                     <Header/>
 
                     <Switch>
-                        <Route exact path="/"><Home/></Route>
-                        <Route exact path="/login"><Login/></Route>
-                        <Route exact path="/register"><Register/></Route>
-                        <Route exact path="/room/:id"><Room/></Route>
+                        <Route exact path={ROUTES.HOME}><Home/></Route>
+                        <Route exact path={ROUTES.LOGIN}><Login/></Route>
+                        <Route exact path={ROUTES.REGISTER}><Register/></Route>
+                        <Route exact path={ROUTES.GAME}><Game/></Route>
+                        {/*<Route exact path={ROUTES.STATS}></Route>*/}
                     </Switch>
 
                 </div>
