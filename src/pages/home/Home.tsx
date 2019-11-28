@@ -48,7 +48,7 @@ const Home: React.FC = () => {
         <div className="modal-buttons">
           <div
             className="btn btn-large btn-public"
-            onClick={() => history.push(`${ROUTES.GAME}/${selectedGenreId}`)}
+            onClick={() => history.push(`game/${selectedGenreId}`)}
           >
             Rejoindre une partie publique
           </div>
