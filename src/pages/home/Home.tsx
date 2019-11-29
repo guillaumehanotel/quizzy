@@ -33,9 +33,9 @@ const Home: React.FC = () => {
 
   return (
     <div>
-      <h5 className={"ml-4 mt-4 mb-4"}>Choisissez un thème parmi ceux proposés</h5>
+      <h5 className={"ml-4 mt-4 mb-4"}>{genres.length ? "Choisissez un thème parmi ceux proposés" : "Il n'y a aucun genre disponible. Veuillez réessayer ultérieurement." }</h5>
       <div className="genres-container m-auto">
-        {genres ? genres.map((genre) => (
+        {genres.length ? genres.map((genre) => (
           <div className="genre-parent-item mb-1 hoverable">
             <div
               className="genre-item valign-wrapper"
@@ -47,7 +47,7 @@ const Home: React.FC = () => {
               <p>{genre.name}</p>
             </div>
           </div>
-        )) : <p>No Genres found</p>}
+        )) : null}
       </div>
       <Modal
         isOpen={modalIsOpen}

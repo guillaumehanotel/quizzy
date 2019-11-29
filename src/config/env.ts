@@ -1,4 +1,5 @@
 export const MODE = "dev";
+
 export const DEV_API_URL = "http://lvh.me:8000/api/";
 export const PRODUCTION_API_URL = "http://vps687959.ovh.net/api/";
 

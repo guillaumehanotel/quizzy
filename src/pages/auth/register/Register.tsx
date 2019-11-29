@@ -6,6 +6,8 @@ import { registerUser } from "../../../utils/requests";
 import { FormValidationError } from "../../../utils/errors";
 import { useStore } from "../../../storeProvider";
 import { useHistory } from "react-router";
+import { Link } from 'react-router-dom';
+import { ROUTES } from '../../../config/routes';
 
 
 const Register: React.FC = () => {
@@ -78,7 +80,7 @@ const Register: React.FC = () => {
                                     <button className="btn quizzy-blue full-width" type="submit" name="action">Valider</button>
                                 </div>
                                 <div className="col s5 offset-s2 p0">
-                                    <button className="btn cancel-button full-width" type="submit" name="action">Annuler</button>
+                                    <Link to={ROUTES.HOME} className={"btn cancel-button full-width"}>Annuler</Link>
                                 </div>
                             </div>
                         </div>
