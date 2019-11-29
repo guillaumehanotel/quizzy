@@ -1,0 +1,50 @@
+.stats-container {
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  bottom: 8%;
+  right: 10%;
+  background-color: #ffffff;
+  border-radius: 10px;
+  color: #454545;
+  overflow: scroll;
+
+  h1 {
+    font-size: 25px;
+  }
+
+  .container {
+    width: 90%;
+    margin: auto;
+
+    ul {
+      margin-block-start: 0;
+      margin-block-end: 0;
+    }
+
+    .stat-content {
+      color: #ff9aa1;
+    }
+  }
+
+  .average-score {
+    font-size: x-small;
+  }
+      
+  .VictoryContainer {
+    svg {
+      margin: -10%;
+
+      tspan {
+        font-family: "Montserrat", "Gill Sans MT" !important;
+        font-size: 10px !important;
+      }
+
+      path {
+        fill: transparent!important;
+        stroke: #5092e2!important;
+        stroke-width: 1!important;
+      }
+    }
+  }
+}
