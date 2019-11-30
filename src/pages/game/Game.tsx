@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import SoundWaves from '../../components/elements/soundWaves/SoundWaves';
 import GameInput from '../../components/forms/GameInput/GameInput';
-import AudioIndicator from '../../components/elements/audioIndicator/AudioIndicator';
+import AudioPlayer from '../../components/elements/audioPlayer/AudioPlayer';
+import { GameProvider, useGameDispatch, useGameState } from '../../providers/GameProvider';
+import { SET_PLAY } from '../../config/actions/gameActions';
 
 export enum FOUND {
   FAIL = -1,
@@ -26,11 +28,11 @@ const Game: React.FC = () => {
         <div>Dance</div>
 
         <div className="row">
-          <SoundWaves enable />
+          <SoundWaves />
           <GameInput />
         </div>
 
-       <AudioIndicator track={"https://cdns-preview-7.dzcdn.net/stream/c-78fed100d8c512d608dae53dee8eff1d-4.mp3"} />
+        <AudioPlayer />
       </div>
 
       <div className="col m3">

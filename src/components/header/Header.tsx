@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.scss';
-import { useGlobalState, useStore } from '../../storeProvider';
-import { LOGIN_SUCCESS, LOGOUT } from '../../config/actions';
+import { useGlobalState, useStore } from '../../providers/UserProvider';
+import { LOGIN_SUCCESS, LOGOUT } from '../../config/actions/userActions';
 import { ROUTES } from '../../config/routes';
 import { me, userLogout } from '../../utils/requests';
 

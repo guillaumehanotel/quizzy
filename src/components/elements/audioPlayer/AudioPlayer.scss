@@ -1,0 +1,19 @@
+@import '../../../styles/variables';
+
+.audio-player {
+  display: flex;
+  align-items: center;
+}
+
+.input-range__track--background {
+  background-color: #757575;
+}
+
+.input-range__track--active {
+  background-color: $pink;
+}
+
+.input-range__slider {
+  background-color: white;
+  border-color: $pink;
+}

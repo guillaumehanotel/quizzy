@@ -1,20 +1,21 @@
 import React from 'react';
 import './SoundWaves.scss';
+import { useGameState } from '../../../providers/GameProvider';
 
-type Props = {
-  enable: boolean;
-};
+const SoundWaves: React.FC = () => {
+  const { isPlaying } = useGameState();
 
-const SoundWaves: React.FC<Props> = ({ enable }) => (
-  <div className="sound-waves-container col">
-    <div className={`sound-waves ${enable ? 'animate' : ''}`}>
-      {
-        [...Array(10).keys()].map((key) => (
-          <div className="sound-bar" key={`sound_bar_${key}`} />
-        ))
-      }
+  return (
+    <div className="sound-waves-container col">
+      <div className={`sound-waves ${isPlaying ? 'animate' : ''}`}>
+        {
+          [...Array(10).keys()].map((key) => (
+            <div className="sound-bar" key={`sound_bar_${key}`}/>
+          ))
+        }
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default SoundWaves;

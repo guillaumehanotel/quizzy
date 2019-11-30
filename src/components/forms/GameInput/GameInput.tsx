@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './GameInput.scss';
 import { FOUND } from '../../../pages/game/Game';
+import { useGameState } from '../../../providers/GameProvider';
 
 const getPlaceholder = (found: FOUND) => {
   switch (found) {
@@ -30,9 +31,10 @@ const getBorderClass = (found: FOUND) => {
   }
 };
 
-const GameInput = () => {
+const GameInput: React.FC = () => {
   const [value, setValue] = useState('');
   const [found, setFound] = useState(FOUND.NOTHING);
+  const { isPlaying } = useGameState();
 
   const reset = () => {
     setValue('');
@@ -61,6 +63,7 @@ const GameInput = () => {
         className={`browser-default ${getBorderClass(found)}`}
         onChange={(e) => setValue(e.target.value)}
         onKeyPress={handleKeyPress}
+        disabled={!isPlaying}
       />
 
       <button
