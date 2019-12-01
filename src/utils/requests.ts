@@ -75,3 +75,11 @@ export async function fetchGenres() {
   }
   handleApiErrors(response);
 }
+
+export async function fetchGenre(id: string|number) {
+  const response = await apiRequest(`${API_URL}genre/${id}`, 'GET');
+  if (response.status_code === 200) {
+    return response.data;
+  }
+  handleApiErrors(response);
+}

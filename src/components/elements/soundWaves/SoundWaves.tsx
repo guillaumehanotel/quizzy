@@ -6,7 +6,7 @@ const SoundWaves: React.FC = () => {
   const { isPlaying } = useGameState();
 
   return (
-    <div className="sound-waves-container col">
+    <div className="sound-waves-container">
       <div className={`sound-waves ${isPlaying ? 'animate' : ''}`}>
         {
           [...Array(10).keys()].map((key) => (

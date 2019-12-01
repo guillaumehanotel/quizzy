@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useParams } from 'react-router-dom';
 import SoundWaves from '../../components/elements/soundWaves/SoundWaves';
 import GameInput from '../../components/forms/GameInput/GameInput';
 import AudioPlayer from '../../components/elements/audioPlayer/AudioPlayer';
-import { GameProvider, useGameDispatch, useGameState } from '../../providers/GameProvider';
-import { SET_PLAY } from '../../config/actions/gameActions';
+import GenreBanner from '../../components/elements/GenreBanner/GenreBanner';
+import './Game.scss';
 
 export enum FOUND {
   FAIL = -1,
@@ -16,18 +16,18 @@ export enum FOUND {
 
 const Game: React.FC = () => {
   // Room id
-  const { roomId } = useParams();
+  const { genreId } = useParams();
 
   return (
-    <div className="container row">
+    <div className="row">
       <div className="col m3">
         history
       </div>
 
       <div className="col m6">
-        <div>Dance</div>
+        <GenreBanner genreId={genreId || ''} />
 
-        <div className="row">
+        <div className="input-container">
           <SoundWaves />
           <GameInput />
         </div>
