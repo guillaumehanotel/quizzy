@@ -45,11 +45,10 @@ const Header: React.FC = () => {
       <div className="nav-wrapper">
         <Link to={ROUTES.HOME} className="left">
           <div className="valign-wrapper">
-            <img src="/assets/quizzy.png" className="logo" alt="quizzy logo" />
             <span className="logo-text w500">QUIZZY</span>
           </div>
         </Link>
-        <ul id="nav-mobile" className="right hide-on-med-and-down valign-wrapper">
+        <ul id="nav-mobile" className="right hide-on-small-and-down valign-wrapper">
           <li>
             <Link to={state.isLogged ? ROUTES.STATS : ROUTES.LOGIN}>
               <span className="connexion-link w500">

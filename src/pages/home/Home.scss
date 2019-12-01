@@ -1,52 +1,81 @@
 .genres-container {
+  width: 90%;
   display: flex;
   flex: 1;
   flex-wrap: wrap;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
 
-  .genre-item {
-    cursor: pointer;
+  .genre-parent-item {
+    height: 150px;
+    width: 250px;
+    overflow: hidden;
     border-radius: 10px;
-    height: 180px;
+    transition: all .3s;
 
-    img {
-      border-radius: 10px;
+    &:hover .genre-item, &:focus .genre-item {
+      transform: scale(1.1);
+      transition: all .3s;
+      background-color: transparent;
     }
 
-    p {
-      font-size: 25px;
-      font-weight: bold;
-      color: white;
-      text-align: center;
-
+    .genre-item {
+      cursor: pointer;
+      border-radius: 10px;
+      height: 100%;
+      width: 100%;
       position: relative;
-      bottom: 120px;
+      background-blend-mode: multiply;
+      background-color: rgba(0, 0, 0, 0.5);
+      background-repeat: 'no-repeat';
+      background-size: 'cover';
+      background-position-y: 'center';
+
+      p {
+        font-size: 25px;
+        font-weight: bold;
+        color: white;
+        margin: auto;
+      }
     }
   }
 }
 
-.modal-buttons {
-  margin-top: 50px;
+.modal-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
   display: flex;
-  flex-wrap: wrap;
 
-  .btn {
-    border-radius: 15px;
-    margin-left: auto;
-    margin-right: auto;
-    height: auto;
-    min-height: 20px;
-    line-height: 20px;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    width: 250px;
-    font-weight: bold;
+  .cross {
+    position: absolute;
+    right: 0px!important;
+    top: -10px!important;
+    font-size: x-large;
+
+    &:hover {
+      cursor: pointer;
+    }
   }
 
   .btn-public {
     background-color: #ff9aa1;
   }
+
+  .btn {
+    text-transform: none!important;
+    line-height: 1.2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0px;
+  }
+
+  p {
+    font-size: large;
+  }
 }
 
-
+.ReactModal__Overlay--after-open {
+  background-color: rgba(0, 0, 0, 0.5)!important;
+}
