@@ -21,6 +21,7 @@ const Register: React.FC = () => {
     try {
       const { user, token } = await registerUser(values);
       dispatch({ type: actions.LOGIN_SUCCESS, payload: { user, token } });
+      dispatch({ type: actions.HAS_JUST_REGISTERED, payload: true });
       history.push('/');
     } catch (e) {
       if (e instanceof FormValidationError) {

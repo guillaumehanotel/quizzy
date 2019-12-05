@@ -7,6 +7,7 @@ const defaultState = {
   error: false,
   user: null,
   token: null,
+  hasJustRegistered: false,
 };
 
 type Action = { type: string; payload?: any; }
@@ -38,6 +39,11 @@ function reducer(state: State = defaultState, action: Action) {
         user: null,
         token: null,
       };
+    case actions.HAS_JUST_REGISTERED:
+      return {
+        ...state,
+        hasJustRegistered: action.payload
+      }  
     default:
       return state;
   }

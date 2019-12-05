@@ -5,10 +5,13 @@ import { fetchGenres } from '../../utils/requests';
 import './Home.scss';
 import { ROUTES } from '../../config/routes';
 import { Genre } from '../../models/Genre';
-import { useGlobalState } from '../../providers/UserProvider';
+import { useGlobalState, useStore } from '../../providers/UserProvider';
+import { HAS_JUST_REGISTERED } from '../../config/actions/userActions';
+import * as M from 'materialize-css'
 
 const Home: React.FC = () => {
   const state = useGlobalState();
+  const dispatch = useStore();
   const [genres, setGenres] = useState<Genre[]>([]);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [selectedGenreId, setSelectedGenreId] = useState(0);
@@ -26,16 +29,24 @@ const Home: React.FC = () => {
     setGenres(genres);
   };
 
+  const displayAlertIfNeeded = () => {
+    if (state.hasJustRegistered) {
+      M.toast({html: "Inscription effectuée avec succès, vous pouvez à présent jouer à Quizzy !"});
+      dispatch({ type: HAS_JUST_REGISTERED, payload: false });
+    }
+  }
+
   useEffect(() => {
     getGenres();
+    displayAlertIfNeeded();
   }, []);
 
   return (
     <div>
       <h5 className="ml-4 mt-4 mb-4">{genres.length ? 'Choisissez un thème parmi ceux proposés' : "Il n'y a aucun genre disponible. Veuillez réessayer ultérieurement." }</h5>
       <div className="genres-container m-auto">
-        {genres.length ? genres.map((genre) => (
-          <div className="genre-parent-item mb-1 hoverable">
+        {genres.length ? genres.map((genre, key) => (
+          <div key={key} className="genre-parent-item mb-1 hoverable">
             <div
               className="genre-item valign-wrapper"
               key={genre.id}

@@ -45,6 +45,7 @@ const Login: React.FC = () => {
     let { user, token } = await fetchUserByGoogleId(googleUser.googleId);
     if (user === null) {
       ({ user, token } = await storeUser(googleUser));
+      dispatch({ type: actions.HAS_JUST_REGISTERED, payload: true });
     }
     dispatch({ type: actions.LOGIN_SUCCESS, payload: { user, token } });
     history.push('/');
@@ -72,7 +73,7 @@ const Login: React.FC = () => {
                     required: 'L\'email est obligatoire',
                     pattern: {
                       value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                      message: 'invalid email address',
+                      message: 'Adresse email invalide',
                     },
                   })}
                 />
