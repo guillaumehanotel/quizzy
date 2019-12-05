@@ -1,5 +1,14 @@
 import React, { createContext, useReducer, useContext } from 'react';
 import * as actions from '../config/actions/userActions';
+import { User } from '../models/User';
+
+type stateType = {
+  isLogged: boolean;
+  loading: boolean;
+  error: boolean;
+  user: User | null;
+  token: string | null;
+};
 
 const defaultState = {
   isLogged: false,
@@ -58,5 +67,5 @@ export const UserProvider: React.ComponentType = ({ children }) => {
   );
 };
 
-export const useGlobalState = () => useContext(stateCtx);
-export const useStore = () => useContext(dispatchCtx);
+export const useUserState = () => useContext(stateCtx);
+export const useUserDispatch = () => useContext(dispatchCtx);

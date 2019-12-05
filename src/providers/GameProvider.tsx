@@ -1,8 +1,15 @@
 import React, { createContext, useContext, useReducer } from 'react';
+import { PresenceChannel, NullPresenceChannel } from 'laravel-echo/src/channel/index';
 import * as actions from '../config/actions/gameActions';
 
-const defaultState = {
+type stateType = {
+  isPlaying: boolean;
+  channel: PresenceChannel | NullPresenceChannel | null;
+}
+
+const defaultState: stateType = {
   isPlaying: false,
+  channel: null,
 };
 
 type Action = { type: string; payload?: any; }
@@ -10,6 +17,8 @@ type State = typeof defaultState;
 
 const reducer = (state: State = defaultState, action: Action) => {
   switch (action.type) {
+    case actions.SET_CHANNEL:
+      return { ...state, channel: action.payload };
     case actions.SET_PLAY:
       return { ...state, isPlaying: true };
     case actions.SET_PAUSE:

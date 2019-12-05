@@ -7,7 +7,7 @@ import * as actions from '../../../config/actions/userActions';
 import { registerUser } from '../../../utils/requests';
 import { FormValidationError } from '../../../utils/errors';
 import { ROUTES } from '../../../config/routes';
-import { useStore } from '../../../providers/UserProvider';
+import { useUserDispatch } from '../../../providers/UserProvider';
 
 const Register: React.FC = () => {
   const history = useHistory();
@@ -15,7 +15,7 @@ const Register: React.FC = () => {
     handleSubmit, register, errors, setError,
   } = useForm();
   const [isPasswordVisible, togglePasswordVisibility] = useState(false);
-  const dispatch = useStore();
+  const dispatch = useUserDispatch();
 
   const onSubmit = async (values: any) => {
     try {

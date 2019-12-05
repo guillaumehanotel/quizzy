@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.scss';
-import { useGlobalState, useStore } from '../../providers/UserProvider';
+import { useUserState, useUserDispatch } from '../../providers/UserProvider';
 import { LOGIN_SUCCESS, LOGOUT } from '../../config/actions/userActions';
 import { ROUTES } from '../../config/routes';
 import { me, userLogout } from '../../utils/requests';
 
 const Header: React.FC = () => {
-  const state = useGlobalState();
-  const dispatch = useStore();
+  const state = useUserState();
+  const dispatch = useUserDispatch();
   const [localStorageToken] = useState(localStorage.getItem('token'));
 
   const fetchUser = async (token: string) => {
