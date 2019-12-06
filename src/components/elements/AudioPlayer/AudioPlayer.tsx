@@ -3,86 +3,100 @@ import 'react-input-range/lib/css/index.css';
 import './AudioPlayer.scss';
 import Timer from '../Timer/Timer';
 import { useGameDispatch, useGameState } from '../../../providers/GameProvider';
-import { SET_PAUSE, SET_PLAY } from '../../../config/actions/gameActions';
-import { ChannelUser } from '../../../models/User';
+import { SET_PAUSE, SET_PLAY, SET_TRACK } from '../../../config/actions/gameActions';
 import { EVENTS } from '../../../config/channelEvents';
-import { NullPresenceChannel } from 'laravel-echo/dist/channel';
+import { fetchTrack } from '../../../utils/requests';
+import { User } from '../../../models/User';
 
-const mocksTracks = [
-  {
-    track: "https://cdns-preview-7.dzcdn.net/stream/c-78fed100d8c512d608dae53dee8eff1d-4.mp3",
-    timeBefore: 5,
-  },
-  {
-    track: "https://cdns-preview-d.dzcdn.net/stream/c-deda7fa9316d9e9e880d2c6207e92260-5.mp3",
-    timeBefore: 5,
-  },
-  {
-    track: "https://cdns-preview-d.dzcdn.net/stream/c-d0989d5eb8e4a5cadbeef21a432ec10a-1.mp3",
-    timeBefore: 5,
-  },
-  {
-    track: "https://cdns-preview-4.dzcdn.net/stream/c-4e9a119a71bf4596ebf44230129a5025-4.mp3",
-    timeBefore: 5,
-  },
-];
+type GameStartEvent = {
+  duration: number;
+}
 
-const DEFAULT_TRACK_TIME = 30;
+type Track = {
+  track: string;
+  pauseDuration: number;
+}
 
 const AudioPlayer: React.FC = () => {
-  const { channel } = useGameState();
+  const { channel, genreId } = useGameState();
   const [track, setTrack] = useState<string>('');
   const [player, setPlayer] = useState<HTMLAudioElement|null>(null);
-  const [duration, setDuration] = useState<number>(DEFAULT_TRACK_TIME);
+  const [duration, setDuration] = useState<number>(0);
   const [onComplete, setOnComplete] = useState<Function|null>(null);
+  const [gameLoading, setGameLoading] = useState<boolean>(false);
+  const [isWaiting, setIsWaiting] = useState<boolean>(false);
   const dispatch = useGameDispatch();
 
+  // TODO: REMOVE IT - For dev (Hot realoading doesn't recreate a new game).
+  useEffect(() => {
+    if (genreId) {
+      fetchNextTrack();
+    }
+  }, [genreId]);
+
+  /**
+   * Websocket events.
+   */
   useEffect(() => {
     if (channel) {
+      channel.here((channelUsers: User[]) => {
+        setIsWaiting(channelUsers.length > 1);
+      });
+
       // @ts-ignore
-      channel.listen(EVENTS.GAME_START, (event) => {
-        console.log('EVENT', event);
+      channel.listenForWhisper(EVENTS.CURRENT_TIMER, (event) => {
+        console.log(event);
+      });
+
+      // @ts-ignore
+      channel.listen(EVENTS.GAME_START, (event: GameStartEvent) => {
+        setGameLoading(true);
+        setDuration(event.duration / 1000);
+        setOnComplete(() => fetchNextTrack);
+      });
+
+      // @ts-ignore
+      channel.listen(EVENTS.SONG_START, (event: Track) => {
+        setTrack(event.track);
+        setOnComplete(() => playTrack);
+        setDuration(event.pauseDuration);
+        dispatch({ type: SET_PAUSE });
+      });
+
+      // @ts-ignore
+      channel.listen(EVENTS.SONG_END, (event) => {
+        console.log('Song just ended : ', event);
+      });
+
+      // @ts-ignore
+      channel.listen(EVENTS.GAME_END, (event) => {
+        console.log('Game is finished : ', event);
       });
     }
   }, [channel]);
 
+  const fetchNextTrack = () => {
+    fetchTrack(genreId);
+  };
+
   const playTrack = () => {
     if (player) {
       player.play();
-      setDuration(Math.trunc(player.duration));
-      // eslint-disable-next-line no-use-before-define
       setOnComplete(() => fetchNextTrack);
+      setDuration(Math.trunc(player.duration));
       dispatch({ type: SET_PLAY });
     }
   };
 
-  const fetchNextTrack = async () => {
-    // TODO: Request to get new track
-    dispatch({ type: SET_PAUSE });
-    if (!track) {
-      setTrack(mocksTracks[0].track);
-      setOnComplete(() => playTrack);
-      setDuration(mocksTracks[0].timeBefore);
-    } else {
-      const randomIndex = Math.floor(Math.random() * mocksTracks.length) + 1;
-      setTrack(mocksTracks[randomIndex].track);
-      setDuration(mocksTracks[randomIndex].timeBefore);
-      setOnComplete(() => playTrack);
-    }
-  };
-
-  /* TODO: Listen websocket
-    On GameSongStart: Set track, Set waiting time duration, st callback to play song
-  */
-
-  useEffect(() => {
-    if (player) {
-      fetchNextTrack();
-    }
-  }, [player]);
+  // useEffect(() => {
+  //   if (player) {
+  //     fetchNextTrack();
+  //   }
+  // }, [player]);
 
   useEffect(() => {
     if (player && track.trim().length > 0) {
+      dispatch({ type: SET_TRACK, payload: track });
       player.src = track;
     }
   }, [player, track]);
@@ -93,7 +107,7 @@ const AudioPlayer: React.FC = () => {
         controls
         ref={(ref) => setPlayer(ref)}
         preload="metadata"
-        className="hide"
+        // className="hide"
         muted
       >
         <source src="https://cdns-preview-7.dzcdn.net/stream/c-78fed100d8c512d608dae53dee8eff1d-4.mp3" type="audio/mp3" />
@@ -101,6 +115,17 @@ const AudioPlayer: React.FC = () => {
       </audio>
 
       <Timer duration={duration} onComplete={() => { if (onComplete) onComplete(); }} />
+
+      {
+        gameLoading
+          ? <div className="message-info">La partie commence dans un instant !</div>
+          : null
+      }
+      {
+        isWaiting
+          ? <div className="message-info">Vous allez commencer à jouer dans un instant, préparez-vous !</div>
+          : null
+      }
     </>
   );
 };

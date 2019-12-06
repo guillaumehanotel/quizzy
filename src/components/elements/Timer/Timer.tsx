@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import InputRange from 'react-input-range';
+import { useGameState } from '../../../providers/GameProvider';
+import { User } from '../../../models/User';
+import { EVENTS } from '../../../config/channelEvents';
+import { PresenceChannel } from 'laravel-echo/dist/channel';
 
 type Props = {
   duration: number;
@@ -10,8 +14,26 @@ let interval: any;
 
 const Timer: React.FC<Props> = (props) => {
   const { duration, onComplete } = props;
+  const { channel, isPlaying, track } = useGameState();
   const [counter, setCounter] = useState<number>(duration);
   const [value, setValue] = useState<number>(0);
+  // const [joiningListener, setJoiningListener] = useState<PresenceChannel|null>(null);
+
+  // useEffect(() => {
+  //   if (channel) {
+  //     setJoiningListener(
+  //       channel.joining(() => {
+  //         console.log(counter);
+  //
+  //         // @ts-ignore
+  //         channel.whisper(EVENTS.CURRENT_TIMER, {
+  //           currentTimer: counter,
+  //           track: isPlaying ? track : '',
+  //         });
+  //       }),
+  //     );
+  //   }
+  // }, [channel, isPlaying, track, counter]);
 
   useEffect(() => {
     if (duration) {
@@ -27,7 +49,7 @@ const Timer: React.FC<Props> = (props) => {
           setCounter((count) => count - 1);
         }
 
-        setValue((v) => (v + 0.1 > duration ? v : v + 0.1));
+        setValue((v) => (v + 0.1 >= duration ? v : v + 0.1));
       }, 100);
     }
   }, [duration]);

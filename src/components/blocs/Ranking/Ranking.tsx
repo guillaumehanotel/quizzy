@@ -1,36 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import { useGameState } from '../../../providers/GameProvider';
-import { ChannelUser, User } from '../../../models/User';
+import { User } from '../../../models/User';
 import { useUserState } from '../../../providers/UserProvider';
 import SideBloc from '../SideBloc/SideBloc';
 
 const Ranking: React.FC = () => {
   const { channel } = useGameState();
   const currentUser: User | null = useUserState().user;
-  const [users, setUsers] = useState<ChannelUser[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     if (channel) {
-      channel.here((channelUsers: ChannelUser[]) => {
+      channel.here((channelUsers: User[]) => {
         setUsers(channelUsers);
       });
-      channel.joining((user: ChannelUser) => {
+      channel.joining((user: User) => {
         setUsers((prevUsers) => [...prevUsers, user]);
       });
-      channel.leaving((user: ChannelUser) => {
+      channel.leaving((user: User) => {
         setUsers((prevUsers) => (
-          prevUsers.filter((prevUser) => prevUser.user.id !== user.user.id)
+          prevUsers.filter((prevUser) => prevUser.id !== user.id)
         ));
       });
     }
   }, [channel]);
 
-  const getRankingLabel = (user: ChannelUser, index: number) => {
+  const getRankingLabel = (user: User, index: number) => {
     const position = index === 0 ? '1er' : `${index + 1}ème`;
-    const userScore = user.user.score;
+    const userScore = user.score;
     const score = userScore && userScore > 1 ? `${userScore}pts` : `${userScore}pt`;
 
-    return `${position} : ${user.user.name} (${score})`;
+    return `${position} : ${user.name} (${score})`;
   };
 
   return (
@@ -38,7 +38,7 @@ const Ranking: React.FC = () => {
       <ul>
         {
           users.map((user, index: number) => (
-            <li key={user.user.id} className={currentUser && currentUser!.id === user.user.id ? 'w500' : ''}>
+            <li key={user.id} className={currentUser && currentUser!.id === user.id ? 'w500' : ''}>
               {getRankingLabel(user, index)}
             </li>
           ))

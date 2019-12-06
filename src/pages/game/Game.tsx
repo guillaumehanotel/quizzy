@@ -4,7 +4,7 @@ import Echo from 'laravel-echo';
 import { useUserState } from '../../providers/UserProvider';
 import { DEV_WEBSOCKET_URL } from '../../config/env';
 import { useGameDispatch } from '../../providers/GameProvider';
-import { SET_CHANNEL } from '../../config/actions/gameActions';
+import { SET_CHANNEL, SET_GENRE } from '../../config/actions/gameActions';
 import './Game.scss';
 import SoundWaves from '../../components/elements/SoundWaves/SoundWaves';
 import GameInput from '../../components/forms/GameInput/GameInput';
@@ -21,6 +21,10 @@ const Game: React.FC = () => {
   const { genreId } = useParams();
   const userState = useUserState();
   const dispatch = useGameDispatch();
+
+  useEffect(() => {
+    dispatch({ type: SET_GENRE, payload: genreId });
+  }, [genreId]);
 
   useEffect(() => {
     if (userState.token) {
@@ -48,7 +52,7 @@ const Game: React.FC = () => {
       </div>
 
       <div className="col m6">
-        <GenreBanner genreId={genreId || ''} />
+        <GenreBanner />
 
         <div className="input-container">
           <SoundWaves />

@@ -3,6 +3,7 @@ import ReactTooltip from 'react-tooltip';
 import './Result.scss';
 import '../../../styles/_variables.scss';
 import { STATUS } from '../../../config/game';
+import SoundWaves from '../SoundWaves/SoundWaves';
 
 type Props = {
   status?: STATUS;
@@ -34,13 +35,29 @@ const Result: React.FC<Props> = (props) => {
 
   return (
     <>
-      <div className={`result ${getClassName()}`} data-tip data-for={`tooltip_${index}`} />
+      {
+        isPlaying
+          ? <SoundWaves />
+          : <div className={`result ${getClassName()}`} data-tip data-for={`tooltip_${index}`} />
+      }
 
-      <ReactTooltip id={`tooltip_${index}`} type="light" place="bottom" effect="solid">
-        <span>{artist || 'Toto'}</span>
-        <span> - </span>
-        <span>{title || 'L\'asticot'}</span>
-      </ReactTooltip>
+      {
+        artist && title
+          ? (
+            <ReactTooltip
+              id={`tooltip_${index}`}
+              className="tooltip"
+              type="light"
+              place="bottom"
+              effect="solid"
+            >
+              <span>{artist || 'Toto'}</span>
+              <span> - </span>
+              <span>{title || 'L\'asticot'}</span>
+            </ReactTooltip>
+          )
+          : null
+      }
     </>
   );
 };

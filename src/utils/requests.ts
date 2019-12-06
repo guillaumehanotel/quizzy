@@ -83,3 +83,11 @@ export async function fetchGenre(id: string|number) {
   }
   handleApiErrors(response);
 }
+
+export async function fetchTrack(genreId: string|number) {
+  const response = await apiRequest(`${API_URL}/quizz/${genreId}/askTrack`, 'GET');
+  if (response.status_code === 200 || response.status_code === 204) {
+    return response.data;
+  }
+  handleApiErrors(response);
+}

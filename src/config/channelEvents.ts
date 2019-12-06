@@ -1,5 +1,7 @@
 export const EVENTS = {
-  GAME_START: 'GameStart',
-  SONG_START: 'GameSongStart',
-  SONG_END: 'GameSongEnd',
+  GAME_START: 'QuizzStartEvent',
+  GAME_END: 'QuizzEndEvent',
+  SONG_START: 'QuizzSongStartEvent',
+  SONG_END: 'QuizzSongEndEvent',
+  CURRENT_TIMER: 'CurrentTimer',
 };

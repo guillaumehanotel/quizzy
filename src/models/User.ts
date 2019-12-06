@@ -8,7 +8,3 @@ export type User = {
   avatarUrl?: string;
   score?: number;
 }
-
-export type ChannelUser = {
-  user: User;
-};

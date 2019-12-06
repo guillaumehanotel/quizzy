@@ -2,23 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { fetchGenre } from '../../../utils/requests';
 import { Genre } from '../../../models/Genre';
 import './GenreBanner.scss';
+import { useGameState } from '../../../providers/GameProvider';
 
-type Props = {
-  genreId: string|number;
-}
-
-const GenreBanner: React.FC<Props> = ({ genreId }) => {
+const GenreBanner: React.FC = () => {
+  const { genreId } = useGameState();
   const [genre, setGenre] = useState<Genre|null>(null);
 
   const getGenre = async () => {
     const fetchedGenre: Genre = await fetchGenre(genreId);
-    console.log(fetchedGenre)
     setGenre(fetchedGenre);
   };
 
   useEffect(() => {
-    getGenre();
-  }, []);
+    if (genre) {
+      getGenre();
+    }
+  }, [genreId]);
 
   return (
     <>
