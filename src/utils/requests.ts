@@ -83,3 +83,13 @@ export async function fetchGenre(id: string|number) {
   }
   handleApiErrors(response);
 }
+
+export async function fetchStats(id: string|number, token: string) {
+  const response = await apiRequest(`${API_URL}/users/${id}/stats`, 'GET', null, token);
+  if (response.status_code === 200) {
+    return response.data;
+  } else {
+    return null;
+  }
+  handleApiErrors(response);
+}

@@ -1,100 +1,131 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './Stats.scss';
-import { VictoryLine, VictoryChart, VictoryAxis } from 'victory';
-
-interface StatsMap {
-  [key: string]: number | string;
-}
+import { VictoryLine, VictoryChart, VictoryAxis, VictoryZoomContainer } from 'victory';
+import { fetchStats } from '../../utils/requests';
+import { useUserState } from '../../providers/UserProvider';
+import { Stat, Game, ChartGame } from '../../models/Stat';
 
 const Stats: React.FC = () => {
-  const stats: StatsMap = {
-    'Parties jouées': 14,
-    'Parties remportées': 10,
-    'Score moyen': 18,
-    'Meilleur score': 22,
-    'Catégorie préférée': 'Chanson française',
-  };
+  const state = useUserState();
+  const [stats, setStats] = useState<Stat | null>(null);
+  const [graphData, setGraphDatas] = useState<ChartGame[] | null>(null);
+  const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+    "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
 
-  const data = [
-    { month: 'Janvier', year: '2019', average: 10 },
-    { month: 'Févrer', year: '2019', average: 12 },
-    { month: 'Mars', year: '2019', average: 15 },
-    { month: 'Avril', year: '2019', average: 14 },
-    { month: 'Mail', year: '2019', average: 11 },
-    { month: 'Juin', year: '2019', average: 17 },
-    { month: 'Juillet', year: '2019', average: 19 },
-    { month: 'Août', year: '2019', average: 18 },
-  ];
+  useEffect(() => {
+    fetchUserStats();
+  }, [state.user]);
+
+  const fetchUserStats = async () => {
+    if (state.user !== null && state.token !== null) {
+      const stats: Stat | null = await fetchStats(state.user!['id'], state.token!)
+      if (stats !== null) {
+        const games: ChartGame[] = [];
+        const reducer = (accumulator, currentValue) => accumulator + currentValue;
+        const chartDates: string[] = stats.games.map((game) => {
+          const gameDate = new Date(game.created_at)
+          return `${gameDate.getDay() + '-' + gameDate.getMonth() + '-' + gameDate.getFullYear()}`;
+        });
+        const uniquesChartDates: string[] = [...new Set(chartDates)]
+        for (let date of uniquesChartDates) {
+            const dateGames = stats.games.filter((game) => {
+              const gameDate = new Date(game.created_at)
+              return `${gameDate.getDay() + '-' + gameDate.getMonth() + '-' + gameDate.getFullYear()}` === date;
+            })
+            if (dateGames.length) {
+              const totalDayPoints = dateGames.map((game) => game.points).reduce(reducer) / dateGames.length;
+              const gameDate = new Date(dateGames[0].created_at)
+              const chartGame: ChartGame = {
+                points: totalDayPoints,
+                date: `${gameDate.getDay()}/${gameDate.getMonth() + 1}/${gameDate.getFullYear()}`
+              }
+              games.push(chartGame)
+            }
+        }
+        console.log(games)
+        setGraphDatas(games)
+      }
+      setStats(stats)
+    }
+  }
 
   return (
     <div className="stats-container z-depth-1">
       <h1 className="center-align">Mes statistiques</h1>
       <div className="container">
         <div className="row">
-          <div className="col s5">
-            <ul>
-              {
-                Object.keys(stats).length > 0
-                  ? Object.keys(stats).map((key: string) => (
-                    <li key={key}>
-                      <span className="stat-title w500">
-                        {key}
-                        {' '}
-:
-                      </span>
-                      <span className="stat-content ml-1 w500">
-                        {stats[key]}
-                      </span>
-                    </li>
-                  ))
-                  : null
-              }
-            </ul>
+          <div className="col s5" style={{overflow: 'scroll'}}>
+            {
+              stats !== null && Object.keys(stats).length > 0
+                ?
+                <ul>
+                  <li>
+                    <span className="stat-title w500">Score moyen : </span>
+                    <span className="stat-content ml-1 w500">
+                      {stats.averageScore}
+                    </span>
+                  </li>
+                  <li>
+                    <span className="stat-title w500">Meilleur score : </span>
+                    <span className="stat-content ml-1 w500">
+                      {stats.bestScore}
+                    </span>
+                  </li>
+                  <li>
+                    <span className="stat-title w500">Catégorie la plus jouée : </span>
+                    <span className="stat-content ml-1 w500">
+                      {stats.favoriteCategory['name']}
+                    </span>
+                  </li>
+                  <li>
+                    <span className="stat-title w500">Parties gagnées : </span>
+                    <span className="stat-content ml-1 w500">
+                      {stats.winGames}
+                    </span>
+                  </li>
+                  <li>
+                    <span className="stat-title w500">Nombre total de parties : </span>
+                    <span className="stat-content ml-1 w500">
+                      {stats.totalGames}
+                    </span>
+                  </li>
+                </ul>
+                : null
+            }
           </div>
-          <div className="col s7">
-            <span className="average-score">Historique du score moyen</span>
-            <VictoryChart domainPadding={20}>
-              <VictoryAxis
-                tickValues={data.map((val) => val.month)}
-              />
-              <VictoryAxis
-                dependentAxis
-                tickFormat={(x) => (`${x}`)}
-              />
-              <VictoryLine
-                data={data}
-                animate={{
-                  duration: 2000,
-                  onLoad: { duration: 1000 },
-                }}
-                x="month"
-                y="average"
-                events={[{
-                  target: 'data',
-                  eventHandlers: {
-                    onMouseOver: () => {
-                      console.log('toto');
-                      return [
-                        {
-                          target: 'labels',
-                          mutation: () => ({ active: true }),
-                        },
-                      ];
-                    },
-                    onMouseOut: () => [
-                      {
-                        target: 'labels',
-                        mutation: () => ({ active: false }),
-                      },
-                    ],
-                  },
-                }]}
-                interpolation="cardinal"
-                labels={data.map((val) => val.average)}
-                // labelComponent={<VictoryTooltip cornerRadius={10}/>}
-              />
-            </VictoryChart>
-          </div>
+          {graphData !== null ?
+            <div className="col s7" style={{overflow: 'scroll'}}>
+              <span className="average-score">Score moyen des parties par jour</span>
+              <VictoryChart 
+                domainPadding={20}
+                containerComponent={
+                  <VictoryZoomContainer
+                    zoomDomain={{x: [0, 4]}}
+                    allowZoom={false}
+                  />
+                }
+              >
+                <VictoryAxis
+                  tickValues={graphData.map((val) => val.date)}
+                />
+                <VictoryAxis
+                  dependentAxis
+                  tickFormat={(x) => (`${x}`)}
+                />
+                <VictoryLine
+                  data={graphData}
+                  animate={{
+                    duration: 2000,
+                    onLoad: { duration: 1000 },
+                  }}
+                  x="date"
+                  y="points"
+                  interpolation="cardinal"
+                  labels={graphData.map((val) => val.points)}
+                />
+              </VictoryChart>
+            </div>
+            : null}
         </div>
       </div>
     </div>

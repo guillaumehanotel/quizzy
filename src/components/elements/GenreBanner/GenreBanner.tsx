@@ -12,7 +12,6 @@ const GenreBanner: React.FC<Props> = ({ genreId }) => {
 
   const getGenre = async () => {
     const fetchedGenre: Genre = await fetchGenre(genreId);
-    console.log(fetchedGenre)
     setGenre(fetchedGenre);
   };
 
