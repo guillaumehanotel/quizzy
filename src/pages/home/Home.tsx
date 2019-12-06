@@ -7,7 +7,6 @@ import './Home.scss';
 import { ROUTES } from '../../config/routes';
 import { Genre } from '../../models/Genre';
 import { useUserState, useUserDispatch } from '../../providers/UserProvider';
-import * as M from 'materialize-css';
 import { HAS_JUST_REGISTERED } from '../../config/actions/userActions';
 
 const Home: React.FC = () => {
