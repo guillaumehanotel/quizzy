@@ -1,0 +1,19 @@
+@import '../../../styles/variables';
+
+.list-results {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+
+  .progress-bar {
+    position: absolute;
+    top: calc(50% - 1px);
+    left: 22px;
+    height: 2px;
+    max-width: calc(100% - 45px);
+    background-color: $darkGrey;
+    z-index: 0;
+    transition: width .7s ease;
+  }
+}

@@ -5,11 +5,13 @@ import * as actions from '../config/actions/gameActions';
 type stateType = {
   isPlaying: boolean;
   channel: PresenceChannel | NullPresenceChannel | null;
+  gameHistory: [];
 }
 
 const defaultState: stateType = {
   isPlaying: false,
   channel: null,
+  gameHistory: [],
 };
 
 type Action = { type: string; payload?: any; }
