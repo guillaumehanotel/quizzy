@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import 'react-input-range/lib/css/index.css';
 import './AudioPlayer.scss';
-import Timer from '../timer/Timer';
-import { useGameDispatch } from '../../../providers/GameProvider';
+import Timer from '../Timer/Timer';
+import { useGameDispatch, useGameState } from '../../../providers/GameProvider';
 import { SET_PAUSE, SET_PLAY } from '../../../config/actions/gameActions';
+import { ChannelUser } from '../../../models/User';
+import { EVENTS } from '../../../config/channelEvents';
+import { NullPresenceChannel } from 'laravel-echo/dist/channel';
 
 const mocksTracks = [
   {
@@ -27,11 +30,21 @@ const mocksTracks = [
 const DEFAULT_TRACK_TIME = 30;
 
 const AudioPlayer: React.FC = () => {
+  const { channel } = useGameState();
   const [track, setTrack] = useState<string>('');
   const [player, setPlayer] = useState<HTMLAudioElement|null>(null);
   const [duration, setDuration] = useState<number>(DEFAULT_TRACK_TIME);
   const [onComplete, setOnComplete] = useState<Function|null>(null);
   const dispatch = useGameDispatch();
+
+  useEffect(() => {
+    if (channel) {
+      // @ts-ignore
+      channel.listen(EVENTS.GAME_START, (event) => {
+        console.log('EVENT', event);
+      });
+    }
+  }, [channel]);
 
   const playTrack = () => {
     if (player) {
@@ -67,21 +80,6 @@ const AudioPlayer: React.FC = () => {
       fetchNextTrack();
     }
   }, [player]);
-
-  // useEffect(() => {
-  //   if (player) {
-      // player.addEventListener('durationchange', () => {
-      //   player.play();
-      //   setDuration(Math.trunc(player.duration));
-      //   setOnComplete(null);
-      // });
-
-      // player.addEventListener('ended', () => {
-      //   setDuration(10);
-      //   setOnComplete(() => fetchNextTrack);
-      // });
-    // }
-  // }, [player]);
 
   useEffect(() => {
     if (player && track.trim().length > 0) {

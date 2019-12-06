@@ -1,30 +1,30 @@
 import React, { useState } from 'react';
 import './GameInput.scss';
-import { FOUND } from '../../../pages/game/Game';
 import { useGameState } from '../../../providers/GameProvider';
+import { STATUS } from '../../../config/game';
 
-const getPlaceholder = (found: FOUND) => {
-  switch (found) {
-    case FOUND.ARTIST:
+const getPlaceholder = (status: STATUS) => {
+  switch (status) {
+    case STATUS.ARTIST:
       return 'Titre';
-    case FOUND.TITLE:
+    case STATUS.TITLE:
       return 'Artiste';
-    case FOUND.ALL:
+    case STATUS.ALL:
       return 'Bravo !';
     default:
       return 'Artiste et titre';
   }
 };
 
-const getBorderClass = (found: FOUND) => {
-  switch (found) {
-    case FOUND.FAIL:
+const getBorderClass = (status: STATUS) => {
+  switch (status) {
+    case STATUS.FAIL:
       return 'border-red';
-    case FOUND.ARTIST:
+    case STATUS.ARTIST:
       return 'border-blue';
-    case FOUND.TITLE:
+    case STATUS.TITLE:
       return 'border-orange';
-    case FOUND.ALL:
+    case STATUS.ALL:
       return 'border-green';
     default:
       return '';
@@ -33,12 +33,12 @@ const getBorderClass = (found: FOUND) => {
 
 const GameInput: React.FC = () => {
   const [value, setValue] = useState('');
-  const [found, setFound] = useState(FOUND.NOTHING);
+  const [found, setFound] = useState(STATUS.NOTHING);
   const { isPlaying } = useGameState();
 
   const reset = () => {
     setValue('');
-    setFound(FOUND.NOTHING);
+    setFound(STATUS.NOTHING);
   };
 
   const sendValue = () => {

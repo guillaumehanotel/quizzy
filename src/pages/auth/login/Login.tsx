@@ -8,11 +8,11 @@ import * as env from '../../../config/env';
 import * as actions from '../../../config/actions/userActions';
 import { FormValidationError, UnauthorizedError } from '../../../utils/errors';
 import { User } from '../../../models/User';
-import { useStore } from '../../../providers/UserProvider';
+import { useUserDispatch } from '../../../providers/UserProvider';
 
 const Login: React.FC = () => {
   const history = useHistory();
-  const dispatch = useStore();
+  const dispatch = useUserDispatch();
   const [isPasswordVisible, togglePasswordVisibility] = useState(false);
   const {
     handleSubmit, register, errors, setError,

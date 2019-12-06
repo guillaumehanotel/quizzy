@@ -27,7 +27,7 @@ const Timer: React.FC<Props> = (props) => {
           setCounter((count) => count - 1);
         }
 
-        setValue((v) => v + 0.1);
+        setValue((v) => (v + 0.1 > duration ? v : v + 0.1));
       }, 100);
     }
   }, [duration]);

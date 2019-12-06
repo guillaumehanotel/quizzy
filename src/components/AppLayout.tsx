@@ -39,11 +39,13 @@ const AppLayout: React.FC = () => (
               ? <Redirect to={{ pathname: '/' }} />
               : <Register />)}
           />
-          <Route exact path={ROUTES.GAME}>
-            <GameProvider>
-              <Game />
-            </GameProvider>
-          </Route>
+          <Route
+            exact
+            path={ROUTES.GAME}
+            render={() => (!localStorage.getItem('token')
+              ? <Redirect to={{ pathname: '/' }} />
+              : <GameProvider><Game /></GameProvider>)}
+          />
           <Route
             exact
             path={ROUTES.STATS}
