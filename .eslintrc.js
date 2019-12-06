@@ -27,6 +27,7 @@ module.exports = {
     "rules": {
         "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx", ".tsx"] }],
         "react/prop-types": [0],
+        "no-use-before-define": [0]
     },
     "settings": {
         "import/resolver": {

@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import * as M from 'materialize-css';
 import Modal from 'react-modal';
 import { fetchGenres } from '../../utils/requests';
 import './Home.scss';
 import { ROUTES } from '../../config/routes';
 import { Genre } from '../../models/Genre';
-import { useUserState } from '../../providers/UserProvider';
+import { useUserDispatch, useUserState } from '../../providers/UserProvider';
+import { HAS_JUST_REGISTERED } from '../../config/actions/userActions';
 
 const Home: React.FC = () => {
   const state = useUserState();
+  const dispatch = useUserDispatch();
   const [genres, setGenres] = useState<Genre[]>([]);
   const [modalIsOpen, setIsOpen] = useState(false);
   const [selectedGenreId, setSelectedGenreId] = useState(0);
@@ -28,7 +31,7 @@ const Home: React.FC = () => {
 
   const displayAlertIfNeeded = () => {
     if (state.hasJustRegistered) {
-      M.toast({html: "Inscription effectuée avec succès, vous pouvez à présent jouer à Quizzy !"});
+      M.toast({ html: "Inscription effectuée avec succès, vous pouvez à présent jouer à Quizzy !" });
       dispatch({ type: HAS_JUST_REGISTERED, payload: false });
     }
   }
