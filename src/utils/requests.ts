@@ -31,6 +31,9 @@ export async function me(token: string) {
   if (response.status_code === 200) {
     return response.data;
   }
+  if (response.status_code === 401) {
+    localStorage.clear();
+  }
   handleApiErrors(response);
 }
 
@@ -77,7 +80,7 @@ export async function fetchGenres() {
 }
 
 export async function fetchGenre(id: string|number) {
-  const response = await apiRequest(`${API_URL}/genre/${id}`, 'GET');
+  const response = await apiRequest(`${API_URL}/genres/${id}`, 'GET');
   if (response.status_code === 200) {
     return response.data;
   }

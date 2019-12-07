@@ -12,8 +12,9 @@ const Results: React.FC = () => {
       {
         [...Array(10).keys()].map((el, i) => (
           <Result
-            artist={i < gameHistory.length ? gameHistory[i].artist : null}
-            title={i < gameHistory.length ? gameHistory[i].title : null}
+            artist={i < gameHistory.length ? gameHistory[i].artist : undefined}
+            title={i < gameHistory.length ? gameHistory[i].title : undefined}
+            status={i < gameHistory.length ? gameHistory[i].status : undefined}
             isPlaying={isPlaying && i === gameHistory.length}
             index={i}
             key={`result_history_${i}`}

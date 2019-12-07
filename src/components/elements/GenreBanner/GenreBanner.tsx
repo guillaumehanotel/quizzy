@@ -14,7 +14,7 @@ const GenreBanner: React.FC = () => {
   };
 
   useEffect(() => {
-    if (genre) {
+    if (genreId) {
       getGenre();
     }
   }, [genreId]);

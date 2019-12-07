@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useReducer } from 'react';
-import { PresenceChannel, NullPresenceChannel } from 'laravel-echo/src/channel/index';
+import { NullPresenceChannel, PresenceChannel } from 'laravel-echo/src/channel/index';
 import * as actions from '../config/actions/gameActions';
 import { Result } from '../models/Game';
+import { STATUS } from '../config/game';
 
 type stateType = {
   genreId: number | string;
@@ -9,6 +10,7 @@ type stateType = {
   track: string;
   channel: PresenceChannel | NullPresenceChannel | null;
   gameHistory: Result[];
+  status: STATUS;
 }
 
 const defaultState: stateType = {
@@ -17,6 +19,7 @@ const defaultState: stateType = {
   track: '',
   channel: null,
   gameHistory: [],
+  status: STATUS.NOTHING,
 };
 
 type Action = { type: string; payload?: any; }
@@ -34,6 +37,12 @@ const reducer = (state: State = defaultState, action: Action) => {
       return { ...state, isPlaying: false };
     case actions.SET_TRACK:
       return { ...state, track: action.payload };
+    case actions.ADD_SONG_TO_HISTORY:
+      const result = action.payload;
+      result.status = state.status === STATUS.NOTHING ? STATUS.FAIL : state.status;
+      return { ...state, gameHistory: [...state.gameHistory, result] };
+    case actions.SET_STATUS:
+      return { ...state, currentStatus: action.payload };
     default:
       return state;
   }

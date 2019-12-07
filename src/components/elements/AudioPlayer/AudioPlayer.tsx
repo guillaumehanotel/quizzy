@@ -3,10 +3,11 @@ import 'react-input-range/lib/css/index.css';
 import './AudioPlayer.scss';
 import Timer from '../Timer/Timer';
 import { useGameDispatch, useGameState } from '../../../providers/GameProvider';
-import { SET_PAUSE, SET_PLAY, SET_TRACK } from '../../../config/actions/gameActions';
+import { ADD_SONG_TO_HISTORY, SET_PAUSE, SET_PLAY, SET_TRACK } from '../../../config/actions/gameActions';
 import { EVENTS } from '../../../config/channelEvents';
 import { fetchTrack } from '../../../utils/requests';
 import { User } from '../../../models/User';
+import { Result } from '../../../models/Game';
 
 type GameStartEvent = {
   duration: number;
@@ -50,13 +51,15 @@ const AudioPlayer: React.FC = () => {
 
       // @ts-ignore
       channel.listen(EVENTS.GAME_START, (event: GameStartEvent) => {
+        console.log('Game Start', event);
         setGameLoading(true);
         setDuration(event.duration / 1000);
-        setOnComplete(() => fetchNextTrack);
+        setOnComplete(() => startGame);
       });
 
       // @ts-ignore
       channel.listen(EVENTS.SONG_START, (event: Track) => {
+        console.log('Song Start', event);
         setTrack(event.track);
         setOnComplete(() => playTrack);
         setDuration(event.pauseDuration);
@@ -64,16 +67,22 @@ const AudioPlayer: React.FC = () => {
       });
 
       // @ts-ignore
-      channel.listen(EVENTS.SONG_END, (event) => {
-        console.log('Song just ended : ', event);
+      channel.listen(EVENTS.SONG_END, (event: Result) => {
+        console.log('Song End : ', event);
+        dispatch({ type: ADD_SONG_TO_HISTORY, payload: event });
       });
 
       // @ts-ignore
       channel.listen(EVENTS.GAME_END, (event) => {
-        console.log('Game is finished : ', event);
+        console.log('Game End : ', event);
       });
     }
   }, [channel]);
+
+  const startGame = () => {
+    setGameLoading(false);
+    fetchNextTrack();
+  };
 
   const fetchNextTrack = () => {
     fetchTrack(genreId);

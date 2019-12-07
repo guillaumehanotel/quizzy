@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './GameInput.scss';
-import { useGameState } from '../../../providers/GameProvider';
+import { useGameDispatch, useGameState } from '../../../providers/GameProvider';
 import { STATUS } from '../../../config/game';
+import { SET_STATUS } from '../../../config/actions/gameActions';
 
 const getPlaceholder = (status: STATUS) => {
   switch (status) {
@@ -33,12 +34,12 @@ const getBorderClass = (status: STATUS) => {
 
 const GameInput: React.FC = () => {
   const [value, setValue] = useState('');
-  const [found, setFound] = useState(STATUS.NOTHING);
-  const { isPlaying } = useGameState();
+  const { isPlaying, status } = useGameState();
+  const dispatch = useGameDispatch();
 
   const reset = () => {
     setValue('');
-    setFound(STATUS.NOTHING);
+    dispatch({ type: SET_STATUS, payload: STATUS.NOTHING });
   };
 
   const sendValue = () => {
@@ -58,9 +59,9 @@ const GameInput: React.FC = () => {
     <div className="col s10 game-input-container">
       <input
         type="text"
-        placeholder={getPlaceholder(found)}
+        placeholder={getPlaceholder(status)}
         value={value}
-        className={`browser-default ${getBorderClass(found)}`}
+        className={`browser-default ${getBorderClass(status)}`}
         onChange={(e) => setValue(e.target.value)}
         onKeyPress={handleKeyPress}
         disabled={!isPlaying}
