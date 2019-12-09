@@ -8,6 +8,7 @@ type stateType = {
   genreId: number | string;
   isPlaying: boolean;
   track: string;
+  order: number | string,
   channel: PresenceChannel | NullPresenceChannel | null;
   gameHistory: Result[];
   status: STATUS;
@@ -17,6 +18,7 @@ const defaultState: stateType = {
   genreId: 0,
   isPlaying: false,
   track: '',
+  order: 0,
   channel: null,
   gameHistory: [],
   status: STATUS.NOTHING,
@@ -40,9 +42,13 @@ const reducer = (state: State = defaultState, action: Action) => {
     case actions.ADD_SONG_TO_HISTORY:
       const result = action.payload;
       result.status = state.status === STATUS.NOTHING ? STATUS.FAIL : state.status;
+      result.order = state.order;
+
       return { ...state, gameHistory: [...state.gameHistory, result] };
     case actions.SET_STATUS:
-      return { ...state, currentStatus: action.payload };
+      return { ...state, status: action.payload };
+    case actions.SET_ORDER:
+      return { ...state, order: action.payload };
     default:
       return state;
   }

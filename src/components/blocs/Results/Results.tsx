@@ -7,19 +7,33 @@ const Results: React.FC = () => {
   const { gameHistory, isPlaying } = useGameState();
   const [progress, setProgress] = useState(0);
 
+  const getResultHistory = (resultIndex) => (
+    gameHistory.find((history) => history.order === (resultIndex + 1))
+  );
+
+  const isResultPlaying = (resultIndex) => (
+    isPlaying
+    && gameHistory.length > 0
+    && resultIndex === gameHistory[gameHistory.length - 1].order
+  );
+
   return (
     <div className="list-results">
       {
-        [...Array(10).keys()].map((el, i) => (
-          <Result
-            artist={i < gameHistory.length ? gameHistory[i].artist : undefined}
-            title={i < gameHistory.length ? gameHistory[i].title : undefined}
-            status={i < gameHistory.length ? gameHistory[i].status : undefined}
-            isPlaying={isPlaying && i === gameHistory.length}
-            index={i}
-            key={`result_history_${i}`}
-          />
-        ))
+        [...Array(10).keys()].map((el, i) => {
+          const resultHistory = getResultHistory(i);
+
+          return (
+            <Result
+              artist={resultHistory ? resultHistory.artist : undefined}
+              title={resultHistory ? resultHistory.title : undefined}
+              status={resultHistory ? resultHistory.status : undefined}
+              isPlaying={isResultPlaying(i)}
+              index={i}
+              key={`result_history_${i}`}
+            />
+          );
+        })
       }
       <div className="progress-bar" style={{ width: `${progress}%` }} />
     </div>

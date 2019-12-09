@@ -5,3 +5,4 @@ export const SET_GENRE = 'SET_GENRE';
 export const SET_TRACK = 'SET_TRACK';
 export const ADD_SONG_TO_HISTORY = 'ADD_SONG_TO_HISTORY';
 export const SET_STATUS = 'SET_STATUS';
+export const SET_ORDER = 'SET_ORDER';

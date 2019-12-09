@@ -37,6 +37,9 @@ export const apiRequest = async (
 };
 
 export const handleApiErrors = (response: any) => {
+  if (response.status_code === 200 || response.status_code === 204) {
+    return;
+  }
   if (response.status_code === 401) {
     throw new UnauthorizedError(response.message);
   } else if (response.status_code === 422) {

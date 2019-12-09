@@ -8,9 +8,10 @@ type stateType = {
   error: boolean;
   user: User | null;
   token: string | null;
+  hasJustRegistered: boolean;
 };
 
-const defaultState = {
+const defaultState: stateType = {
   isLogged: false,
   loading: false,
   error: false,
@@ -51,8 +52,8 @@ function reducer(state: State = defaultState, action: Action) {
     case actions.HAS_JUST_REGISTERED:
       return {
         ...state,
-        hasJustRegistered: action.payload
-      }  
+        hasJustRegistered: action.payload,
+      };
     default:
       return state;
   }

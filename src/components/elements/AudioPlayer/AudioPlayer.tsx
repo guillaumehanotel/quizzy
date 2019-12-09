@@ -3,19 +3,16 @@ import 'react-input-range/lib/css/index.css';
 import './AudioPlayer.scss';
 import Timer from '../Timer/Timer';
 import { useGameDispatch, useGameState } from '../../../providers/GameProvider';
-import { ADD_SONG_TO_HISTORY, SET_PAUSE, SET_PLAY, SET_TRACK } from '../../../config/actions/gameActions';
+import {
+  ADD_SONG_TO_HISTORY, SET_ORDER, SET_PAUSE, SET_PLAY, SET_TRACK,
+} from '../../../config/actions/gameActions';
 import { EVENTS } from '../../../config/channelEvents';
 import { fetchTrack } from '../../../utils/requests';
 import { User } from '../../../models/User';
-import { Result } from '../../../models/Game';
+import { Result, Track } from '../../../models/Game';
 
 type GameStartEvent = {
   duration: number;
-}
-
-type Track = {
-  track: string;
-  pauseDuration: number;
 }
 
 const AudioPlayer: React.FC = () => {
@@ -28,7 +25,7 @@ const AudioPlayer: React.FC = () => {
   const [isWaiting, setIsWaiting] = useState<boolean>(false);
   const dispatch = useGameDispatch();
 
-  // TODO: REMOVE IT - For dev (Hot realoading doesn't recreate a new game).
+  // TODO: REMOVE IT - For dev (Hot reloading doesn't recreate a new game).
   useEffect(() => {
     if (genreId) {
       fetchNextTrack();
@@ -64,6 +61,8 @@ const AudioPlayer: React.FC = () => {
         setOnComplete(() => playTrack);
         setDuration(event.pauseDuration);
         dispatch({ type: SET_PAUSE });
+        dispatch({ type: SET_TRACK, payload: event.track });
+        dispatch({ type: SET_ORDER, payload: event.order });
       });
 
       // @ts-ignore
@@ -97,15 +96,8 @@ const AudioPlayer: React.FC = () => {
     }
   };
 
-  // useEffect(() => {
-  //   if (player) {
-  //     fetchNextTrack();
-  //   }
-  // }, [player]);
-
   useEffect(() => {
     if (player && track.trim().length > 0) {
-      dispatch({ type: SET_TRACK, payload: track });
       player.src = track;
     }
   }, [player, track]);

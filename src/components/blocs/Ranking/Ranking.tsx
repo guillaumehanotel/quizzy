@@ -3,8 +3,11 @@ import { useGameState } from '../../../providers/GameProvider';
 import { User } from '../../../models/User';
 import { useUserState } from '../../../providers/UserProvider';
 import SideBloc from '../SideBloc/SideBloc';
+import { EVENTS } from '../../../config/channelEvents';
+import { AnswerCheck } from '../../../models/Game';
 
 const Ranking: React.FC = () => {
+  const [answer, setAnswer] = useState<AnswerCheck|null>(null);
   const { channel } = useGameState();
   const currentUser: User | null = useUserState().user;
   const [users, setUsers] = useState<User[]>([]);
@@ -22,8 +25,27 @@ const Ranking: React.FC = () => {
           prevUsers.filter((prevUser) => prevUser.id !== user.id)
         ));
       });
+      // @ts-ignore
+      channel.listen(EVENTS.USER_RESPONSE, (event: AnswerCheck) => {
+        setAnswer(event);
+      });
     }
   }, [channel]);
+
+  useEffect(() => {
+    if (answer) {
+      setUsers(
+        users.map((u) => {
+          const user = u;
+          if (user.id === answer.userId && user.score !== undefined) {
+            user.score = answer.points;
+          }
+
+          return user;
+        }),
+      );
+    }
+  }, [answer]);
 
   const getRankingLabel = (user: User, index: number) => {
     const position = index === 0 ? '1er' : `${index + 1}ème`;

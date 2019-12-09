@@ -1,6 +1,7 @@
 import React from 'react';
 import SideBloc from '../SideBloc/SideBloc';
 import { useGameState } from '../../../providers/GameProvider';
+import './History.scss';
 
 const History: React.FC = () => {
   const { gameHistory } = useGameState();
@@ -9,10 +10,10 @@ const History: React.FC = () => {
     <SideBloc title="Historique" left>
       <ul>
         {
-          gameHistory.reverse().map((history, i) => (
-            <li key={`history_${i}`}>
-              <strong>{history.title}</strong>
-              {` - ${history.artist}`}
+          gameHistory.slice(0).reverse().map((result, i) => (
+            <li key={`history_${i}`} className="history-item">
+              <strong>{result.artist}</strong>
+              {` - ${result.title}`}
             </li>
           ))
         }

@@ -18,7 +18,7 @@ const Result: React.FC<Props> = (props) => {
     status, artist, title, isPlaying, index,
   } = props;
 
-  const getClassName = () => {
+  const getResultClassName = () => {
     switch (status) {
       case STATUS.FAIL:
         return 'bg-pinkAccent';
@@ -33,12 +33,29 @@ const Result: React.FC<Props> = (props) => {
     }
   };
 
+  const getTextClassName = (isArtist = true) => {
+    switch (status) {
+      case STATUS.FAIL:
+        return 'text-pinkAccent';
+      case STATUS.ARTIST:
+        if (isArtist) return 'text-blue';
+        break;
+      case STATUS.TITLE:
+        if (!isArtist) return 'text-orange';
+        break;
+      case STATUS.ALL:
+        return 'text-green';
+      default:
+        return 'text-darkGrey';
+    }
+  };
+
   return (
     <>
       {
         isPlaying
           ? <SoundWaves />
-          : <div className={`result ${getClassName()}`} data-tip data-for={`tooltip_${index}`} />
+          : <div className={`result ${getResultClassName()}`} data-tip data-for={`tooltip_${index}`} />
       }
 
       {
@@ -51,9 +68,9 @@ const Result: React.FC<Props> = (props) => {
               place="bottom"
               effect="solid"
             >
-              <span>{artist || 'Toto'}</span>
+              <span className={getTextClassName()}>{artist}</span>
               <span> - </span>
-              <span>{title || 'L\'asticot'}</span>
+              <span className={getTextClassName(false)}>{title}</span>
             </ReactTooltip>
           )
           : null

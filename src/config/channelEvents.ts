@@ -3,5 +3,6 @@ export const EVENTS = {
   GAME_END: 'QuizzEndEvent',
   SONG_START: 'QuizzSongStartEvent',
   SONG_END: 'QuizzSongEndEvent',
+  USER_RESPONSE: 'QuizzRefreshEvent',
   CURRENT_TIMER: 'CurrentTimer',
 };
