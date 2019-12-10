@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import InputRange from 'react-input-range';
 import { useGameState } from '../../../providers/GameProvider';
-import { User } from '../../../models/User';
-import { EVENTS } from '../../../config/channelEvents';
-import { PresenceChannel } from 'laravel-echo/dist/channel';
 
 type Props = {
   duration: number;
@@ -62,7 +59,7 @@ const Timer: React.FC<Props> = (props) => {
   }, [counter]);
 
   return (
-    <div className="row audio-player">
+    <div className="row audio-player mt-3 mb-5">
       <div className="form col s9">
         <InputRange
           minValue={0}

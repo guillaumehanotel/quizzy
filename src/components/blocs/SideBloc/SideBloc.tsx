@@ -17,7 +17,7 @@ const SideBloc: React.FC<Props> = (props) => {
       <div className="side-bloc">
         <h2>{ title }</h2>
         <span className="separator" />
-        <div className="children">
+        <div className="children scrollbar">
           { children }
         </div>
       </div>

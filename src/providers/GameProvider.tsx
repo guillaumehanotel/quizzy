@@ -3,6 +3,7 @@ import { NullPresenceChannel, PresenceChannel } from 'laravel-echo/src/channel/i
 import * as actions from '../config/actions/gameActions';
 import { Result } from '../models/Game';
 import { STATUS } from '../config/game';
+import { User } from '../models/User';
 
 type stateType = {
   genreId: number | string;
@@ -12,6 +13,8 @@ type stateType = {
   channel: PresenceChannel | NullPresenceChannel | null;
   gameHistory: Result[];
   status: STATUS;
+  message: string;
+  finalResults: User[];
 }
 
 const defaultState: stateType = {
@@ -22,6 +25,8 @@ const defaultState: stateType = {
   channel: null,
   gameHistory: [],
   status: STATUS.NOTHING,
+  message: '',
+  finalResults: [],
 };
 
 type Action = { type: string; payload?: any; }
@@ -39,16 +44,20 @@ const reducer = (state: State = defaultState, action: Action) => {
       return { ...state, isPlaying: false };
     case actions.SET_TRACK:
       return { ...state, track: action.payload };
+    case actions.SET_STATUS:
+      return { ...state, status: action.payload };
+    case actions.SET_ORDER:
+      return { ...state, order: action.payload };
+    case actions.SET_MESSAGE:
+      return { ...state, message: action.payload };
+    case actions.SET_FINAL_RESULTS:
+      return { ...state, finalResults: action.payload };
     case actions.ADD_SONG_TO_HISTORY:
       const result = action.payload;
       result.status = state.status === STATUS.NOTHING ? STATUS.FAIL : state.status;
       result.order = state.order;
 
       return { ...state, gameHistory: [...state.gameHistory, result] };
-    case actions.SET_STATUS:
-      return { ...state, status: action.payload };
-    case actions.SET_ORDER:
-      return { ...state, order: action.payload };
     default:
       return state;
   }

@@ -37,10 +37,12 @@ const getBorderClass = (status: STATUS) => {
 };
 
 const GameInput: React.FC = () => {
+  const [input, setInput] = useState<HTMLInputElement|null>(null);
   const [value, setValue] = useState('');
   const [artist, setArtist] = useState<boolean>(false);
   const [title, setTitle] = useState<boolean>(false);
   const [answerCheck, setAnswerCheck] = useState<AnswerCheck|null>(null);
+  const [shake, setShake] = useState<boolean>(false);
   const { user } = useUserState();
   const {
     channel, isPlaying, status, genreId, order,
@@ -68,8 +70,12 @@ const GameInput: React.FC = () => {
       if (answerCheck.artist) setArtist(true);
       if (answerCheck.title) setTitle(true);
 
-      if (status === STATUS.NOTHING && !answerCheck.artist && !answerCheck.title) {
-        dispatch({ type: SET_STATUS, payload: STATUS.FAIL });
+      if (!answerCheck.artist && !answerCheck.title) {
+        setShake(true);
+
+        if (status === STATUS.NOTHING) {
+          dispatch({ type: SET_STATUS, payload: STATUS.FAIL });
+        }
       }
     }
   }, [answerCheck]);
@@ -86,6 +92,12 @@ const GameInput: React.FC = () => {
     }
   }, [artist, title]);
 
+  useEffect(() => {
+    if (isPlaying && input) {
+      input.focus();
+    }
+  }, [isPlaying]);
+
   const reset = () => {
     setValue('');
     setArtist(false);
@@ -94,7 +106,8 @@ const GameInput: React.FC = () => {
   };
 
   const sendValue = () => {
-    if (value.trim().length > 0 && user !== null) {
+    if (value.trim().length > 0 && user !== null && (!artist || !title)) {
+      setShake(false);
       sendAnswer(genreId, user.id, { order, input: value });
     }
     setValue('');
@@ -110,10 +123,11 @@ const GameInput: React.FC = () => {
     <>
       <div className="col s9 game-input-container">
         <input
+          ref={(ref) => setInput(ref)}
           type="text"
           placeholder={getPlaceholder(status)}
           value={value}
-          className={`browser-default ${getBorderClass(status)}`}
+          className={`browser-default ${getBorderClass(status)} ${shake ? 'shake' : ''}`}
           onChange={(e) => setValue(e.target.value)}
           onKeyPress={handleKeyPress}
           disabled={!isPlaying}

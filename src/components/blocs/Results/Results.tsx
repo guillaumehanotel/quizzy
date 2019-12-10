@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Results.scss';
 import Result from '../../elements/Result/Result';
 import { useGameState } from '../../../providers/GameProvider';
@@ -7,6 +7,10 @@ const Results: React.FC = () => {
   const { gameHistory, isPlaying } = useGameState();
   const [progress, setProgress] = useState(0);
 
+  useEffect(() => {
+    setProgress(10 * gameHistory.length);
+  }, [gameHistory]);
+
   const getResultHistory = (resultIndex) => (
     gameHistory.find((history) => history.order === (resultIndex + 1))
   );
@@ -14,6 +18,7 @@ const Results: React.FC = () => {
   const isResultPlaying = (resultIndex) => (
     isPlaying
     && gameHistory.length > 0
+    && gameHistory[gameHistory.length - 1].order !== 0
     && resultIndex === gameHistory[gameHistory.length - 1].order
   );
 

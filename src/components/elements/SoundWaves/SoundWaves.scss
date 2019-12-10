@@ -8,6 +8,8 @@
   width: 60px;
   border: 2px solid $pink;
   border-radius: 100%;
+  background-color: $white;
+  z-index: 2;
 
   .sound-waves {
     display: flex;

@@ -13,6 +13,8 @@ import GenreBanner from '../../components/elements/GenreBanner/GenreBanner';
 import Ranking from '../../components/blocs/Ranking/Ranking';
 import History from '../../components/blocs/History/History';
 import Results from '../../components/blocs/Results/Results';
+import GameMessage from '../../components/elements/GameMessage/GameMessage';
+import Podium from '../../components/blocs/Podium/Podium';
 
 // @ts-ignore
 window.io = require('socket.io-client');
@@ -46,27 +48,32 @@ const Game: React.FC = () => {
   }, [userState]);
 
   return (
-    <div className="row">
-      <div className="col m3">
-        <History />
-      </div>
-
-      <div className="col m6">
-        <GenreBanner />
-
-        <div className="input-container">
-          <SoundWaves />
-          <GameInput />
+    <>
+      <div className="game row">
+        <div className="col m3">
+          <History />
         </div>
 
-        <AudioPlayer />
-        <Results />
+        <div className="col m6">
+          <GenreBanner />
+
+          <div className="input-container">
+            <SoundWaves />
+            <GameInput />
+          </div>
+
+          <AudioPlayer />
+          <Results />
+          <GameMessage />
+        </div>
+
+        <div className="col m3">
+          <Ranking />
+        </div>
       </div>
 
-      <div className="col m3">
-        <Ranking />
-      </div>
-    </div>
+      <Podium />
+    </>
   );
 };
 

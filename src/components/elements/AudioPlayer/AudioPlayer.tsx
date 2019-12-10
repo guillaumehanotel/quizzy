@@ -4,7 +4,7 @@ import './AudioPlayer.scss';
 import Timer from '../Timer/Timer';
 import { useGameDispatch, useGameState } from '../../../providers/GameProvider';
 import {
-  ADD_SONG_TO_HISTORY, SET_ORDER, SET_PAUSE, SET_PLAY, SET_TRACK,
+  ADD_SONG_TO_HISTORY, SET_MESSAGE, SET_ORDER, SET_PAUSE, SET_PLAY, SET_TRACK,
 } from '../../../config/actions/gameActions';
 import { EVENTS } from '../../../config/channelEvents';
 import { fetchTrack } from '../../../utils/requests';
@@ -21,16 +21,14 @@ const AudioPlayer: React.FC = () => {
   const [player, setPlayer] = useState<HTMLAudioElement|null>(null);
   const [duration, setDuration] = useState<number>(0);
   const [onComplete, setOnComplete] = useState<Function|null>(null);
-  const [gameLoading, setGameLoading] = useState<boolean>(false);
-  const [isWaiting, setIsWaiting] = useState<boolean>(false);
   const dispatch = useGameDispatch();
 
   // TODO: REMOVE IT - For dev (Hot reloading doesn't recreate a new game).
-  useEffect(() => {
-    if (genreId) {
-      fetchNextTrack();
-    }
-  }, [genreId]);
+  // useEffect(() => {
+  //   if (genreId) {
+  //     fetchNextTrack();
+  //   }
+  // }, [genreId]);
 
   /**
    * Websocket events.
@@ -38,7 +36,10 @@ const AudioPlayer: React.FC = () => {
   useEffect(() => {
     if (channel) {
       channel.here((channelUsers: User[]) => {
-        setIsWaiting(channelUsers.length > 1);
+        dispatch({ type: SET_MESSAGE, payload: 'Vous allez commencer à jouer dans un instant, préparez-vous !' });
+        setOnComplete(() => fetchNextTrack);
+        // TODO: Set to 40
+        setDuration(7);
       });
 
       // @ts-ignore
@@ -49,7 +50,7 @@ const AudioPlayer: React.FC = () => {
       // @ts-ignore
       channel.listen(EVENTS.GAME_START, (event: GameStartEvent) => {
         console.log('Game Start', event);
-        setGameLoading(true);
+        dispatch({ type: SET_MESSAGE, payload: 'La partie commence dans un instant !' });
         setDuration(event.duration / 1000);
         setOnComplete(() => startGame);
       });
@@ -78,12 +79,18 @@ const AudioPlayer: React.FC = () => {
     }
   }, [channel]);
 
+  useEffect(() => {
+    if (player && track.trim().length > 0) {
+      player.src = track;
+    }
+  }, [player, track]);
+
   const startGame = () => {
-    setGameLoading(false);
     fetchNextTrack();
   };
 
   const fetchNextTrack = () => {
+    dispatch({ type: SET_MESSAGE, payload: '' });
     fetchTrack(genreId);
   };
 
@@ -96,37 +103,20 @@ const AudioPlayer: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (player && track.trim().length > 0) {
-      player.src = track;
-    }
-  }, [player, track]);
-
   return (
     <>
       <audio
         controls
         ref={(ref) => setPlayer(ref)}
         preload="metadata"
-        // className="hide"
-        muted
+        className="hide"
+        // muted
       >
         <source src="https://cdns-preview-7.dzcdn.net/stream/c-78fed100d8c512d608dae53dee8eff1d-4.mp3" type="audio/mp3" />
         Your browser does not support the audio element.
       </audio>
 
       <Timer duration={duration} onComplete={() => { if (onComplete) onComplete(); }} />
-
-      {
-        gameLoading
-          ? <div className="message-info">La partie commence dans un instant !</div>
-          : null
-      }
-      {
-        isWaiting
-          ? <div className="message-info">Vous allez commencer à jouer dans un instant, préparez-vous !</div>
-          : null
-      }
     </>
   );
 };
