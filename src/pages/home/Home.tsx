@@ -6,7 +6,7 @@ import { fetchGenres } from '../../utils/requests';
 import './Home.scss';
 import { ROUTES } from '../../config/routes';
 import { Genre } from '../../models/Genre';
-import { useUserDispatch, useUserState } from '../../providers/UserProvider';
+import { useUserState, useUserDispatch } from '../../providers/UserProvider';
 import { HAS_JUST_REGISTERED } from '../../config/actions/userActions';
 
 const Home: React.FC = () => {

@@ -13,7 +13,7 @@ const Header: React.FC = () => {
 
   const fetchUser = async (token: string) => {
     const user = await me(token);
-    dispatch({ type: LOGIN_SUCCESS, payload: { user, token } });
+    dispatch({ type: LOGIN_SUCCESS, payload: { "user": user, "token": token } });
   };
 
   useEffect(() => {

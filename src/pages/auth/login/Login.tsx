@@ -43,8 +43,10 @@ const Login: React.FC = () => {
       avatarUrl: googleResponse.profileObj.imageUrl,
     };
     let { user, token } = await fetchUserByGoogleId(googleUser.googleId);
+    console.log(user, token)
     if (user === null) {
       ({ user, token } = await storeUser(googleUser));
+      console.log(user, token)
       dispatch({ type: actions.HAS_JUST_REGISTERED, payload: true });
     }
     dispatch({ type: actions.LOGIN_SUCCESS, payload: { user, token } });
