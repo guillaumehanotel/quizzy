@@ -60,31 +60,31 @@ const Stats: React.FC = () => {
                   <li>
                     <span className="stat-title w500">Score moyen : </span>
                     <span className="stat-content ml-1 w500">
-                      {stats.averageScore}
+                      {userStats.averageScore}
                     </span>
                   </li>
                   <li>
                     <span className="stat-title w500">Meilleur score : </span>
                     <span className="stat-content ml-1 w500">
-                      {stats.bestScore}
+                      {userStats.bestScore}
                     </span>
                   </li>
                   <li>
                     <span className="stat-title w500">Catégorie la plus jouée : </span>
                     <span className="stat-content ml-1 w500">
-                      {stats.favoriteCategory['name']}
+                      {userStats.favoriteCategory['name']}
                     </span>
                   </li>
                   <li>
                     <span className="stat-title w500">Parties gagnées : </span>
                     <span className="stat-content ml-1 w500">
-                      {stats.winGames}
+                      {userStats.winGames}
                     </span>
                   </li>
                   <li>
                     <span className="stat-title w500">Nombre total de parties : </span>
                     <span className="stat-content ml-1 w500">
-                      {stats.totalGames}
+                      {userStats.totalGames}
                     </span>
                   </li>
                 </ul>
