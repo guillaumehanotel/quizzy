@@ -33,7 +33,6 @@ const Login: React.FC = () => {
   };
 
   const onGoogleLoginSuccess = async (googleResponse: any) => {
-    // TODO handle error
     const googleUser: User = {
       email: googleResponse.profileObj.email,
       name: googleResponse.profileObj.name,
@@ -42,11 +41,12 @@ const Login: React.FC = () => {
       firstname: googleResponse.profileObj.givenName,
       avatarUrl: googleResponse.profileObj.imageUrl,
     };
+    // Trying to retrieve the user with his google ID
     let { user, token } = await fetchUserByGoogleId(googleUser.googleId);
     console.log(user, token)
+    // If we cannot find it, that's because his not yet created
     if (user === null) {
       ({ user, token } = await storeUser(googleUser));
-      console.log(user, token)
       dispatch({ type: actions.HAS_JUST_REGISTERED, payload: true });
     }
     dispatch({ type: actions.LOGIN_SUCCESS, payload: { user, token } });
@@ -54,7 +54,7 @@ const Login: React.FC = () => {
   };
 
   const onGoogleLoginFailed = (err: any) => {
-    console.log('Login failed', err);
+    setError(err.getErrors());
   };
 
   return (

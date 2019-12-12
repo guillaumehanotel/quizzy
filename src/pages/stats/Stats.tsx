@@ -18,22 +18,27 @@ const Stats: React.FC = () => {
 
   const fetchUserStats = async () => {
     if (state.user !== null && state.token !== null) {
+      // Once we're authenticated, we're fetching the user stats
       const stats: Stat | null = await fetchStats(state.user!.id, state.token!);
       if (stats !== null && typeof stats !== 'undefined') {
         const games: ChartGame[] = [];
+        // The reducer below is used to add two values from two different objects (game points) while being in a loop
         const reducer = (accumulator, currentValue) => accumulator + currentValue;
         const chartDates: string[] = stats.games.map((game) => {
           const gameDate = new Date(game.created_at);
           return `${`${gameDate.getDay()}-${gameDate.getMonth()}-${gameDate.getFullYear()}`}`;
         });
+        // Set() creates a unique array
         const uniquesChartDates: string[] = [...new Set(chartDates)];
         for (const date of uniquesChartDates) {
+          // Filtering games depending on their date
           const dateGames = stats.games.filter((game) => {
             const gameDate = new Date(game.created_at);
             return `${`${gameDate.getDay()}-${gameDate.getMonth()}-${gameDate.getFullYear()}`}` === date;
           });
           if (dateGames.length) {
-            const totalDayPoints = dateGames.map((game) => game.points).reduce(reducer) / dateGames.length;
+            // Uses the reducer to add every game points to get the rounded average amount a point by day
+            const totalDayPoints = Math.round(dateGames.map((game) => game.points).reduce(reducer) / dateGames.length);
             const gameDate = new Date(dateGames[0].created_at);
             const chartGame: ChartGame = {
               points: totalDayPoints,
@@ -54,7 +59,7 @@ const Stats: React.FC = () => {
       <h1 className="center-align">Mes statistiques</h1>
       <div className="container">
         <div className="row">
-          <div className="col s5" style={{ overflow: 'scroll' }}>
+          <div className="col s5" style={{ overflow: 'auto' }}>
             {
               userStats !== null && Object.keys(userStats).length > 0 && userStats.games.length
                 ?
@@ -95,7 +100,7 @@ const Stats: React.FC = () => {
           </div>
           {graphData !== null
             ? (
-              <div className="col s7" style={{ overflow: 'scroll' }}>
+              <div className="col s7" style={{ overflow: 'auto' }}>
                 <span className="average-score">Score moyen des parties par jour</span>
                 <VictoryChart
                   domainPadding={20}
