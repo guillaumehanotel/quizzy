@@ -54,7 +54,7 @@ const Stats: React.FC = () => {
         <div className="row">
           <div className="col s5" style={{overflow: 'scroll'}}>
             {
-              userStats !== null && Object.keys(userStats).length > 0
+              userStats !== null && Object.keys(userStats).length > 0 && userStats.games.length
                 ?
                 <ul>
                   <li>
@@ -88,7 +88,7 @@ const Stats: React.FC = () => {
                     </span>
                   </li>
                 </ul>
-                : null
+                : <span>Vous n'avez pas encore joué de partie.</span>
             }
           </div>
           {graphData !== null ?
