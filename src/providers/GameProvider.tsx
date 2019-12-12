@@ -9,7 +9,7 @@ type stateType = {
   genreId: number | string;
   isPlaying: boolean;
   track: string;
-  order: number | string,
+  order: number,
   channel: PresenceChannel | NullPresenceChannel | null;
   gameHistory: Result[];
   status: STATUS;

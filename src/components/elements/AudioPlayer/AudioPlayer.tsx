@@ -73,7 +73,9 @@ const AudioPlayer: React.FC = () => {
       });
 
       // @ts-ignore
-      channel.listen(EVENTS.GAME_END, (event) => {
+      channel.listen(EVENTS.GAME_END, (event: { duration: number }) => {
+        setOnComplete(() => playTrack);
+        setDuration(event.duration);
         console.log('Game End : ', event);
       });
     }
@@ -96,7 +98,13 @@ const AudioPlayer: React.FC = () => {
 
   const playTrack = () => {
     if (player) {
-      player.play();
+      try {
+        player.play();
+      } catch (e) {
+        console.error(`Une erreur est survenue pendant la lecture de l'extrait : ${e}`);
+        dispatch({ type: SET_MESSAGE, payload: 'Une erreur est survenue pendant la lecture de l\'extrait' });
+        fetchNextTrack();
+      }
       setOnComplete(() => fetchNextTrack);
       setDuration(Math.trunc(player.duration));
       dispatch({ type: SET_PLAY });

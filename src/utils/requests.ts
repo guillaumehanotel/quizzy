@@ -1,7 +1,6 @@
 import { apiRequest, handleApiErrors } from './helpers';
 import * as env from '../config/env';
 import { User } from '../models/User';
-import { Answer } from '../models/Game';
 
 const API_URL = env.MODE === 'dev' ? env.DEV_API_URL : env.PRODUCTION_API_URL;
 

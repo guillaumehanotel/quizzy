@@ -4,23 +4,20 @@ import Result from '../../elements/Result/Result';
 import { useGameState } from '../../../providers/GameProvider';
 
 const Results: React.FC = () => {
-  const { gameHistory, isPlaying } = useGameState();
+  const { gameHistory, isPlaying, order } = useGameState();
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    setProgress(10 * gameHistory.length);
-  }, [gameHistory]);
+    if (order) {
+      setProgress(10 * (order - 1));
+    }
+  }, [order]);
 
   const getResultHistory = (resultIndex) => (
     gameHistory.find((history) => history.order === (resultIndex + 1))
   );
 
-  const isResultPlaying = (resultIndex) => (
-    isPlaying
-    && gameHistory.length > 0
-    && gameHistory[gameHistory.length - 1].order !== 0
-    && resultIndex === gameHistory[gameHistory.length - 1].order
-  );
+  const isResultPlaying = (resultIndex) => isPlaying && order !== 0 && order === resultIndex + 1;
 
   return (
     <div className="list-results">

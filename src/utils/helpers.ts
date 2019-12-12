@@ -1,7 +1,8 @@
 import { FormValidationError, ServerUnreachableError, UnauthorizedError } from './errors';
 
 /**
- * API Request handler
+ * API Request handler.
+ *
  * @param url - api endpoint
  * @param method - http method
  * @param bodyParams - body parameters of request
@@ -36,6 +37,11 @@ export const apiRequest = async (
   }
 };
 
+/**
+ * Handle API Errors.
+ *
+ * @param response
+ */
 export const handleApiErrors = (response: any) => {
   if (response.status_code === 200 || response.status_code === 204) {
     return;
