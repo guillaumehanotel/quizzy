@@ -7,6 +7,7 @@ import { registerUser } from '../../../utils/requests';
 import { FormValidationError } from '../../../utils/errors';
 import { ROUTES } from '../../../config/routes';
 import { useUserDispatch } from '../../../providers/UserProvider';
+import Input from '../../../components/elements/Input/Input';
 
 /**
  * Register form.
@@ -41,15 +42,12 @@ const Register: React.FC = () => {
           <form className="col s12" onSubmit={handleSubmit(onSubmit)}>
             <div className="row">
               <div className="col s10 m3 m-auto input-field float-none">
-                <input
+                <Input
                   placeholder="Pseudo"
                   name="name"
                   type="text"
-                  className="z-depth-1 browser-default full-width"
-                  ref={register({
-                    required: 'Le pseudo est obligatoire',
-                    validate: (value) => value !== 'admin' || 'Nice try!',
-                  })}
+                  register={register}
+                  requiredMessage="Le pseudo est obligatoire"
                 />
                 {errors.name && errors.name.message}
               </div>
@@ -57,18 +55,16 @@ const Register: React.FC = () => {
 
             <div className="row">
               <div className="col s10 m3 m-auto input-field float-none">
-                <input
+                <Input
                   placeholder="Email"
                   name="email"
                   type="text"
-                  className="z-depth-1 browser-default full-width"
-                  ref={register({
-                    required: 'L\'email est obligatoire',
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                      message: 'invalid email address',
-                    },
-                  })}
+                  requiredMessage="L'email est obligatoire"
+                  register={register}
+                  validationPattern={{
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                    message: 'Adresse email invalide',
+                  }}
                 />
                 {errors.email && errors.email.message}
               </div>
@@ -76,14 +72,12 @@ const Register: React.FC = () => {
 
             <div className="row">
               <div className="col s10 m3 m-auto input-field float-none">
-                <input
+                <Input
                   placeholder="Mot de passe"
                   name="password"
                   type={isPasswordVisible ? 'text' : 'password'}
-                  className="z-depth-1 browser-default full-width"
-                  ref={register({
-                    required: 'Le mot de passe est obligatoire',
-                  })}
+                  requiredMessage="Le mot de passe est obligatoire"
+                  register={register}
                 />
                 <img onClick={() => togglePasswordVisibility(!isPasswordVisible)} className="password-toggler" src="./assets/view.png" />
               </div>

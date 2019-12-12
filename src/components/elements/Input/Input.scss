@@ -1,0 +1,29 @@
+@import '../../../styles/_variables.scss';
+
+.input-field {
+  input {
+    border: none;
+    height: 45px;
+    border-radius: 6px;
+    padding-left: 20px;
+    padding-right: 20px;
+    font-family: "Montserrat", sans-serif;
+  }
+
+  input:focus {
+    outline: $pink auto 3px;
+  }
+
+  .password-toggler {
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    top: 50%;
+    right: 8%;
+    transform: translate(0, -50%);
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+}

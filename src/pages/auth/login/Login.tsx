@@ -9,6 +9,7 @@ import * as actions from '../../../config/actions/userActions';
 import { FormValidationError, UnauthorizedError } from '../../../utils/errors';
 import { User } from '../../../models/User';
 import { useUserDispatch } from '../../../providers/UserProvider';
+import Input from '../../../components/elements/Input/Input';
 
 /**
  * Login form.
@@ -46,7 +47,6 @@ const Login: React.FC = () => {
     };
     // Trying to retrieve the user with his google ID
     let { user, token } = await fetchUserByGoogleId(googleUser.googleId);
-    console.log(user, token)
     // If we cannot find it, that's because his not yet created
     if (user === null) {
       ({ user, token } = await storeUser(googleUser));
@@ -69,18 +69,16 @@ const Login: React.FC = () => {
           <form className="col s12" onSubmit={handleSubmit(onSubmit)}>
             <div className="row">
               <div className="col s10 m3 m-auto input-field float-none">
-                <input
+                <Input
                   placeholder="Email"
                   name="email"
                   type="text"
-                  className="z-depth-1 browser-default full-width"
-                  ref={register({
-                    required: 'L\'email est obligatoire',
-                    pattern: {
-                      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                      message: 'Adresse email invalide',
-                    },
-                  })}
+                  requiredMessage="L'email est obligatoire"
+                  register={register}
+                  validationPattern={{
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                    message: 'Adresse email invalide',
+                  }}
                 />
                 {errors.email && errors.email.message}
               </div>
@@ -88,14 +86,12 @@ const Login: React.FC = () => {
 
             <div className="row">
               <div className="col s10 m3 m-auto input-field float-none">
-                <input
+                <Input
                   placeholder="Mot de passe"
                   name="password"
                   type={isPasswordVisible ? 'text' : 'password'}
-                  className="z-depth-1 browser-default full-width"
-                  ref={register({
-                    required: 'Le mot de passe est obligatoire',
-                  })}
+                  requiredMessage="Le mot de passe est obligatoire"
+                  register={register}
                 />
                 <img
                   onClick={() => togglePasswordVisibility(!isPasswordVisible)}
