@@ -19,15 +19,20 @@ import Podium from '../../components/blocs/Podium/Podium';
 // @ts-ignore
 window.io = require('socket.io-client');
 
+/**
+ * Game page.
+ */
 const Game: React.FC = () => {
   const { genreId } = useParams();
   const userState = useUserState();
   const dispatch = useGameDispatch();
 
+  // Dispatch the current music category.
   useEffect(() => {
     dispatch({ type: SET_GENRE, payload: genreId });
   }, [genreId]);
 
+  // Connect to websocket.
   useEffect(() => {
     if (userState.token) {
       const echo = new Echo({

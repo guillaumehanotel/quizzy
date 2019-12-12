@@ -1,6 +1,7 @@
 import { apiRequest, handleApiErrors } from './helpers';
 import * as env from '../config/env';
 import { User } from '../models/User';
+import { Answer } from '../models/Game';
 
 const API_URL = env.MODE === 'dev' ? env.DEV_API_URL : env.PRODUCTION_API_URL;
 
@@ -26,6 +27,9 @@ export async function loginUser(body: any): Promise<any> {
   handleApiErrors(response);
 }
 
+/**
+ * Auto log user with his token.
+ */
 export async function me(token: string) {
   const response = await apiRequest(`${API_URL}/me`, 'GET', null, token);
   if (response.status_code === 200) {
@@ -92,7 +96,7 @@ export async function fetchTrack(genreId: string|number) {
   handleApiErrors(response);
 }
 
-export async function sendAnswer(genreId: number | string, userId: number | undefined, answer: { input: string; order: number | string }) {
+export async function sendAnswer(genreId: number | string, userId: number | undefined, answer: Answer) {
   const response = await apiRequest(`${API_URL}/quizz/${genreId}/user/${userId}/song`, 'POST', answer);
   handleApiErrors(response);
 }

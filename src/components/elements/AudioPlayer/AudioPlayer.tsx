@@ -4,17 +4,17 @@ import './AudioPlayer.scss';
 import Timer from '../Timer/Timer';
 import { useGameDispatch, useGameState } from '../../../providers/GameProvider';
 import {
-  ADD_SONG_TO_HISTORY, SET_MESSAGE, SET_ORDER, SET_PAUSE, SET_PLAY, SET_TRACK,
+  ADD_SONG_TO_HISTORY, CLEAR_HISTORY, SET_MESSAGE, SET_ORDER, SET_PAUSE, SET_PLAY, SET_TRACK,
 } from '../../../config/actions/gameActions';
 import { EVENTS } from '../../../config/channelEvents';
 import { fetchTrack } from '../../../utils/requests';
 import { User } from '../../../models/User';
-import { Result, Track } from '../../../models/Game';
+import { GameEvent, Result, Track } from '../../../models/Game';
 
-type GameStartEvent = {
-  duration: number;
-}
 
+/**
+ * Handle all audio events.
+ */
 const AudioPlayer: React.FC = () => {
   const { channel, genreId } = useGameState();
   const [track, setTrack] = useState<string>('');
@@ -23,16 +23,7 @@ const AudioPlayer: React.FC = () => {
   const [onComplete, setOnComplete] = useState<Function|null>(null);
   const dispatch = useGameDispatch();
 
-  // TODO: REMOVE IT - For dev (Hot reloading doesn't recreate a new game).
-  // useEffect(() => {
-  //   if (genreId) {
-  //     fetchNextTrack();
-  //   }
-  // }, [genreId]);
-
-  /**
-   * Websocket events.
-   */
+  // Websocket events.
   useEffect(() => {
     if (channel) {
       channel.here((channelUsers: User[]) => {
@@ -43,12 +34,7 @@ const AudioPlayer: React.FC = () => {
       });
 
       // @ts-ignore
-      channel.listenForWhisper(EVENTS.CURRENT_TIMER, (event) => {
-        console.log(event);
-      });
-
-      // @ts-ignore
-      channel.listen(EVENTS.GAME_START, (event: GameStartEvent) => {
+      channel.listen(EVENTS.GAME_START, (event: GameEvent) => {
         console.log('Game Start', event);
         dispatch({ type: SET_MESSAGE, payload: 'La partie commence dans un instant !' });
         setDuration(event.duration / 1000);
@@ -64,6 +50,11 @@ const AudioPlayer: React.FC = () => {
         dispatch({ type: SET_PAUSE });
         dispatch({ type: SET_TRACK, payload: event.track });
         dispatch({ type: SET_ORDER, payload: event.order });
+
+        // New game
+        if (event.order === 1) {
+          dispatch({ type: CLEAR_HISTORY });
+        }
       });
 
       // @ts-ignore
@@ -73,14 +64,15 @@ const AudioPlayer: React.FC = () => {
       });
 
       // @ts-ignore
-      channel.listen(EVENTS.GAME_END, (event: { duration: number }) => {
-        setOnComplete(() => playTrack);
+      channel.listen(EVENTS.GAME_END, (event: GameEvent) => {
+        setOnComplete(() => fetchNextTrack);
         setDuration(event.duration);
         console.log('Game End : ', event);
       });
     }
   }, [channel]);
 
+  // Set the track fetched on ausio player.
   useEffect(() => {
     if (player && track.trim().length > 0) {
       player.src = track;

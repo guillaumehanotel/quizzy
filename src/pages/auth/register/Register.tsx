@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import './Register.scss';
 import useForm from 'react-hook-form';
-import { useHistory } from 'react-router';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import * as actions from '../../../config/actions/userActions';
 import { registerUser } from '../../../utils/requests';
 import { FormValidationError } from '../../../utils/errors';
 import { ROUTES } from '../../../config/routes';
 import { useUserDispatch } from '../../../providers/UserProvider';
 
+/**
+ * Register form.
+ */
 const Register: React.FC = () => {
   const history = useHistory();
   const {

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import InputRange from 'react-input-range';
-import { useGameState } from '../../../providers/GameProvider';
 
 type Props = {
   duration: number;
@@ -9,29 +8,15 @@ type Props = {
 
 let interval: any;
 
+/**
+ * Display a time bar with a counter.
+ */
 const Timer: React.FC<Props> = (props) => {
   const { duration, onComplete } = props;
-  const { channel, isPlaying, track } = useGameState();
   const [counter, setCounter] = useState<number>(duration);
   const [value, setValue] = useState<number>(0);
-  // const [joiningListener, setJoiningListener] = useState<PresenceChannel|null>(null);
 
-  // useEffect(() => {
-  //   if (channel) {
-  //     setJoiningListener(
-  //       channel.joining(() => {
-  //         console.log(counter);
-  //
-  //         // @ts-ignore
-  //         channel.whisper(EVENTS.CURRENT_TIMER, {
-  //           currentTimer: counter,
-  //           track: isPlaying ? track : '',
-  //         });
-  //       }),
-  //     );
-  //   }
-  // }, [channel, isPlaying, track, counter]);
-
+  // Handle timer et counter progression.
   useEffect(() => {
     if (duration) {
       clearInterval(interval);
@@ -51,6 +36,7 @@ const Timer: React.FC<Props> = (props) => {
     }
   }, [duration]);
 
+  // Callback at the end of the timer.
   useEffect(() => {
     if (counter === 0) {
       clearInterval(interval);

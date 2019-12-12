@@ -3,6 +3,10 @@ import SideBloc from '../SideBloc/SideBloc';
 import { useGameState } from '../../../providers/GameProvider';
 import './History.scss';
 
+/**
+ * Display game history with artiste and title of each song.
+ * Refreshed at the end of each song.
+ */
 const History: React.FC = () => {
   const { gameHistory } = useGameState();
 

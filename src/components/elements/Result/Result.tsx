@@ -13,6 +13,10 @@ type Props = {
   index: number;
 }
 
+/**
+ * Each result represents a song of the game.
+ * The result have a different behavior depending on the status and the response.
+ */
 const Result: React.FC<Props> = (props) => {
   const {
     status, artist, title, isPlaying, index,

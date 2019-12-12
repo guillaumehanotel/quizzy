@@ -6,6 +6,9 @@ import { LOGIN_SUCCESS, LOGOUT } from '../../config/actions/userActions';
 import { ROUTES } from '../../config/routes';
 import { me, userLogout } from '../../utils/requests';
 
+/**
+ * Display the header of the site.
+ */
 const Header: React.FC = () => {
   const state = useUserState();
   const dispatch = useUserDispatch();
@@ -13,9 +16,10 @@ const Header: React.FC = () => {
 
   const fetchUser = async (token: string) => {
     const user = await me(token);
-    dispatch({ type: LOGIN_SUCCESS, payload: { "user": user, "token": token } });
+    dispatch({ type: LOGIN_SUCCESS, payload: { user, token } });
   };
 
+  // Auto log the user if token exist on local storage.
   useEffect(() => {
     if (state.token === null && state.user === null) {
       if (localStorageToken !== null && localStorageToken !== 'undefined') {
@@ -23,22 +27,14 @@ const Header: React.FC = () => {
       }
     }
   }, [localStorageToken]);
+
   const logout = async () => {
-    localStorage.clear();
+    localStorage.removeItem('token');
     if (state.token !== null) {
-      // @ts-ignore
       await userLogout(state.token);
     }
     dispatch({ type: LOGOUT });
   };
-
-  useEffect(() => {
-    if (state.token === null && state.user === null) {
-      if (localStorageToken !== null && localStorageToken !== 'undefined') {
-        fetchUser(localStorageToken);
-      }
-    }
-  }, [localStorageToken]);
 
   return (
     <nav className="z-depth-1">
@@ -61,7 +57,7 @@ const Header: React.FC = () => {
             state.isLogged
               ? (
                 <li>
-                  <Link to={ROUTES.HOME} onClick={() => dispatch({ type: LOGOUT })}>
+                  <Link to={ROUTES.HOME} onClick={() => logout()}>
                     <span className="connexion-link w500">Déconnexion</span>
                   </Link>
                 </li>

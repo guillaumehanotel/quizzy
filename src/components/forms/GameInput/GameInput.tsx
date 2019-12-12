@@ -36,6 +36,9 @@ const getBorderClass = (status: STATUS) => {
   }
 };
 
+/**
+ * Users can try to found artist and title by this input.
+ */
 const GameInput: React.FC = () => {
   const [input, setInput] = useState<HTMLInputElement|null>(null);
   const [value, setValue] = useState('');
@@ -49,6 +52,7 @@ const GameInput: React.FC = () => {
   } = useGameState();
   const dispatch = useGameDispatch();
 
+  // Websocket events
   useEffect(() => {
     if (channel) {
       // @ts-ignore
@@ -65,6 +69,7 @@ const GameInput: React.FC = () => {
     }
   }, [channel]);
 
+  // Handle state to know if user has found artist and/or title.
   useEffect(() => {
     if (answerCheck) {
       if (answerCheck.artist) setArtist(true);
@@ -80,6 +85,7 @@ const GameInput: React.FC = () => {
     }
   }, [answerCheck]);
 
+  // Handle input color depending on the answer status.
   useEffect(() => {
     if (artist && title) {
       dispatch({ type: SET_STATUS, payload: STATUS.ALL });
@@ -92,6 +98,7 @@ const GameInput: React.FC = () => {
     }
   }, [artist, title]);
 
+  // Auto focus input when a track begin.
   useEffect(() => {
     if (isPlaying && input) {
       input.focus();

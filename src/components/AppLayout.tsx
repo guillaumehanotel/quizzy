@@ -17,6 +17,9 @@ import Register from '../pages/auth/register/Register';
 import Game from '../pages/game/Game';
 import Stats from '../pages/stats/Stats';
 
+/**
+ * Handle routing.
+ */
 const AppLayout: React.FC = () => (
   <Router>
     <UserProvider>

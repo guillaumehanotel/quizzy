@@ -3,10 +3,14 @@ import './Results.scss';
 import Result from '../../elements/Result/Result';
 import { useGameState } from '../../../providers/GameProvider';
 
+/**
+ * Container for results, with progress bar indicator.
+ */
 const Results: React.FC = () => {
   const { gameHistory, isPlaying, order } = useGameState();
   const [progress, setProgress] = useState(0);
 
+  // Handle progress bar.
   useEffect(() => {
     if (order) {
       setProgress(10 * (order - 1));

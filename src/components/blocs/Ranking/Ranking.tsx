@@ -4,7 +4,7 @@ import { User } from '../../../models/User';
 import { useUserState } from '../../../providers/UserProvider';
 import SideBloc from '../SideBloc/SideBloc';
 import { EVENTS } from '../../../config/channelEvents';
-import { AnswerCheck } from '../../../models/Game';
+import { AnswerCheck, GameEvent } from '../../../models/Game';
 import { SET_FINAL_RESULTS } from '../../../config/actions/gameActions';
 
 const getRankingLabel = (user: User, index: number) => {
@@ -15,14 +15,20 @@ const getRankingLabel = (user: User, index: number) => {
   return `${position} : ${user.name} (${score})`;
 };
 
+/**
+ * Display ranking of users in game.
+ * Refreshed each time user answer the current song.
+ * Sort by score.
+ */
 const Ranking: React.FC = () => {
   const [answer, setAnswer] = useState<AnswerCheck|null>(null);
   const [users, setUsers] = useState<User[]>([]);
-  const [isGameEnd, setIsGameEnd] = useState<boolean>(true);
+  const [isGameEnd, setIsGameEnd] = useState<boolean>(false);
   const { channel } = useGameState();
   const currentUser: User | null = useUserState().user;
   const dispatch = useGameDispatch();
 
+  // Websocket events.
   useEffect(() => {
     if (channel) {
       channel.here((channelUsers: User[]) => {
@@ -41,7 +47,7 @@ const Ranking: React.FC = () => {
         setAnswer(event);
       });
       // @ts-ignore
-      channel.listen(EVENTS.GAME_END, (event: { duration: number }) => {
+      channel.listen(EVENTS.GAME_END, (event: GameEvent) => {
         setIsGameEnd(true);
         setTimeout(() => {
           setIsGameEnd(false);
@@ -50,6 +56,7 @@ const Ranking: React.FC = () => {
     }
   }, [channel]);
 
+  // Refresh score when user answer.
   useEffect(() => {
     if (answer) {
       const usersWithNewPoints = users.map((u) => {
@@ -65,6 +72,7 @@ const Ranking: React.FC = () => {
     }
   }, [answer]);
 
+  // Dispatch final results at the end of the game. For podium component.
   useEffect(() => {
     if (isGameEnd) {
       dispatch({ type: SET_FINAL_RESULTS, payload: users });

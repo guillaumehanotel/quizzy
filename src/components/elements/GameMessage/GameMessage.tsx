@@ -1,6 +1,9 @@
 import React from 'react';
 import { useGameState } from '../../../providers/GameProvider';
 
+/**
+ * Display a simple message
+ */
 const GameMessage = () => {
   const { message } = useGameState();
 

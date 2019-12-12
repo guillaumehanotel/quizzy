@@ -7,6 +7,9 @@ import { fetchStats } from '../../utils/requests';
 import { useUserState } from '../../providers/UserProvider';
 import { Stat, Game, ChartGame } from '../../models/Stat';
 
+/**
+ * Statistique page.
+ */
 const Stats: React.FC = () => {
   const state = useUserState();
   const [userStats, setStats] = useState<Stat | null>(null);
@@ -47,7 +50,6 @@ const Stats: React.FC = () => {
             games.push(chartGame);
           }
         }
-        console.log(games);
         setGraphDatas(games);
       }
       setStats(stats);
@@ -62,39 +64,40 @@ const Stats: React.FC = () => {
           <div className="col s5" style={{ overflow: 'auto' }}>
             {
               userStats !== null && Object.keys(userStats).length > 0 && userStats.games.length
-                ?
-                <ul>
-                  <li>
-                    <span className="stat-title w500">Score moyen : </span>
-                    <span className="stat-content ml-1 w500">
-                      {userStats.averageScore}
-                    </span>
-                  </li>
-                  <li>
-                    <span className="stat-title w500">Meilleur score : </span>
-                    <span className="stat-content ml-1 w500">
-                      {userStats.bestScore}
-                    </span>
-                  </li>
-                  <li>
-                    <span className="stat-title w500">Catégorie la plus jouée : </span>
-                    <span className="stat-content ml-1 w500">
-                      {userStats.favoriteCategory['name']}
-                    </span>
-                  </li>
-                  <li>
-                    <span className="stat-title w500">Parties gagnées : </span>
-                    <span className="stat-content ml-1 w500">
-                      {userStats.winGames}
-                    </span>
-                  </li>
-                  <li>
-                    <span className="stat-title w500">Nombre total de parties : </span>
-                    <span className="stat-content ml-1 w500">
-                      {userStats.totalGames}
-                    </span>
-                  </li>
-                </ul>
+                ? (
+                  <ul>
+                    <li>
+                      <span className="stat-title w500">Score moyen : </span>
+                      <span className="stat-content ml-1 w500">
+                        {userStats.averageScore}
+                      </span>
+                    </li>
+                    <li>
+                      <span className="stat-title w500">Meilleur score : </span>
+                      <span className="stat-content ml-1 w500">
+                        {userStats.bestScore}
+                      </span>
+                    </li>
+                    <li>
+                      <span className="stat-title w500">Catégorie la plus jouée : </span>
+                      <span className="stat-content ml-1 w500">
+                        {userStats.favoriteCategory.name}
+                      </span>
+                    </li>
+                    <li>
+                      <span className="stat-title w500">Parties gagnées : </span>
+                      <span className="stat-content ml-1 w500">
+                        {userStats.winGames}
+                      </span>
+                    </li>
+                    <li>
+                      <span className="stat-title w500">Nombre total de parties : </span>
+                      <span className="stat-content ml-1 w500">
+                        {userStats.totalGames}
+                      </span>
+                    </li>
+                  </ul>
+                )
                 : <span>Vous n'avez pas encore joué de partie.</span>
             }
           </div>

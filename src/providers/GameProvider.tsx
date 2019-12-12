@@ -52,6 +52,8 @@ const reducer = (state: State = defaultState, action: Action) => {
       return { ...state, message: action.payload };
     case actions.SET_FINAL_RESULTS:
       return { ...state, finalResults: action.payload };
+    case actions.CLEAR_HISTORY:
+      return { ...state, gameHistory: [] };
     case actions.ADD_SONG_TO_HISTORY:
       const result = action.payload;
       result.status = state.status === STATUS.NOTHING ? STATUS.FAIL : state.status;

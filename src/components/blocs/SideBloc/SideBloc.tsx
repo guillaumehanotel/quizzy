@@ -7,6 +7,9 @@ type Props = {
   right?: boolean;
 }
 
+/**
+ * HOC component for side blocs as Ranking or History.
+ */
 const SideBloc: React.FC<Props> = (props) => {
   const {
     title, children, left, right,

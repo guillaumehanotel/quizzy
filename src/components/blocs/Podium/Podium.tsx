@@ -7,6 +7,9 @@ import { User } from '../../../models/User';
 const getPosition = (index: number) => (index === 0 ? '1er' : `${index + 1}ème`);
 const getScore = (user: User) => (user.score && user.score > 1 ? `${user.score}pts` : `${user.score}pt`);
 
+/**
+ * Display a popin with final results at the end of each game.
+ */
 const Podium = () => {
   const { finalResults } = useGameState();
 
@@ -20,7 +23,7 @@ const Podium = () => {
           <ul>
             {
               finalResults.map((user, i) => (
-                <li>
+                <li key={`podium_${user.id}`}>
                   <strong>{`${getPosition(i)} : `}</strong>
                   <span>{user.name}</span>
                   <em>{` (${getScore(user)})`}</em>

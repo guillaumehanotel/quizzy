@@ -10,6 +10,9 @@ import { FormValidationError, UnauthorizedError } from '../../../utils/errors';
 import { User } from '../../../models/User';
 import { useUserDispatch } from '../../../providers/UserProvider';
 
+/**
+ * Login form.
+ */
 const Login: React.FC = () => {
   const history = useHistory();
   const dispatch = useUserDispatch();

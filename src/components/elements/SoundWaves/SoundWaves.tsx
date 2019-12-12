@@ -2,6 +2,9 @@ import React from 'react';
 import './SoundWaves.scss';
 import { useGameState } from '../../../providers/GameProvider';
 
+/**
+ * Animated component to simulate sound waves.
+ */
 const SoundWaves: React.FC = () => {
   const { isPlaying } = useGameState();
 

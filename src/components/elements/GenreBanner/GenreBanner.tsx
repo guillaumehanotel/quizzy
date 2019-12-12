@@ -4,6 +4,9 @@ import { Genre } from '../../../models/Genre';
 import './GenreBanner.scss';
 import { useGameState } from '../../../providers/GameProvider';
 
+/**
+ * Display the current music category.
+ */
 const GenreBanner: React.FC = () => {
   const { genreId } = useGameState();
   const [genre, setGenre] = useState<Genre|null>(null);

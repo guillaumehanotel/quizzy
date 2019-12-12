@@ -1,28 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import * as M from 'materialize-css';
-import Modal from 'react-modal';
 import { fetchGenres } from '../../utils/requests';
 import './Home.scss';
-import { ROUTES } from '../../config/routes';
 import { Genre } from '../../models/Genre';
 import { useUserState, useUserDispatch } from '../../providers/UserProvider';
 import { HAS_JUST_REGISTERED } from '../../config/actions/userActions';
 
+/**
+ * Homepage.
+ */
 const Home: React.FC = () => {
+  const history = useHistory();
   const state = useUserState();
   const dispatch = useUserDispatch();
   const [genres, setGenres] = useState<Genre[]>([]);
-  const [modalIsOpen, setIsOpen] = useState(false);
-  const [selectedGenreId, setSelectedGenreId] = useState(0);
 
-  const openModal = (genreId: number) => {
-    setSelectedGenreId(genreId);
-    setIsOpen(true);
-  };
-  const closeModal = () => {
-    setIsOpen(false);
-  };
+  useEffect(() => {
+    getGenres();
+    displayAlertIfNeeded();
+  }, []);
 
   const getGenres = async () => {
     const allGenres: Genre[] = await fetchGenres();
@@ -31,16 +28,10 @@ const Home: React.FC = () => {
 
   const displayAlertIfNeeded = () => {
     if (state.hasJustRegistered) {
-      M.toast({ html: "Inscription effectuée avec succès, vous pouvez à présent jouer à Quizzy !" });
+      M.toast({ html: 'Inscription effectuée avec succès, vous pouvez à présent jouer à Quizzy !' });
       dispatch({ type: HAS_JUST_REGISTERED, payload: false });
     }
-  }
-
-  useEffect(() => {
-    getGenres();
-    displayAlertIfNeeded();
-    Modal.setAppElement('#root');
-  }, []);
+  };
 
   return (
     <div>
@@ -53,8 +44,8 @@ const Home: React.FC = () => {
                 <div
                   className="genre-item valign-wrapper"
                   key={genre.id}
-                  onClick={() => openModal(genre.id)}
-                  onKeyPress={() => openModal(genre.id)}
+                  onClick={() => history.push(`game/${genre.id}`)}
+                  onKeyPress={() => history.push(`game/${genre.id}`)}
                   tabIndex={0}
                   role="button"
                   style={{
@@ -68,60 +59,8 @@ const Home: React.FC = () => {
             : null
         }
       </div>
-
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={closeModal}
-        style={customStyles}
-      >
-        <div className="modal-content">
-          <span
-            className="cross w500"
-            onClick={closeModal}
-            onKeyPress={closeModal}
-            tabIndex={0}
-            role="button"
-          >
-            X
-          </span>
-          {
-            state.isLogged
-              ? (
-                <div className="row mt-3">
-                  <div className="col s6">
-                    <Link className="btn btn-public rounded full-width full-height" to={`game/${selectedGenreId}`}>Rejoindre une partie publique</Link>
-                  </div>
-                  <div className="col s6 full-height valign-wrapper">
-                    <Link className="btn quizzy-blue rounded full-width full-height" to={`game/${selectedGenreId}`}>Créer une partie privée</Link>
-                  </div>
-                </div>
-              )
-              : (
-                <div className="m-auto center-align mt-1">
-                  <p className="w500 mb-4">
-                    Pour accéder aux parties, veuillez vous connecter.
-                  </p>
-                  <Link to={ROUTES.LOGIN} className="btn quizzy-blue rounded">Se connecter</Link>
-                </div>
-              )
-          }
-        </div>
-      </Modal>
     </div>
   );
 };
 
 export default Home;
-
-const customStyles = {
-  content: {
-    borderRadius: '13px',
-    top: '55%',
-    left: '55%',
-    right: 'auto',
-    bottom: 'auto',
-    transform: 'translate(-65%, -65%)',
-    display: 'flex',
-    alignItems: 'center',
-  },
-};

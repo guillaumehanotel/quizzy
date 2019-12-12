@@ -1,5 +1,9 @@
 import { STATUS } from '../config/game';
 
+export type GameEvent = {
+  duration: number;
+}
+
 export type Track = {
   order: number | string,
   track: string;
