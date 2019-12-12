@@ -4,7 +4,7 @@ import { User } from '../../../models/User';
 import { useUserState } from '../../../providers/UserProvider';
 import SideBloc from '../SideBloc/SideBloc';
 import { EVENTS } from '../../../config/channelEvents';
-import { AnswerCheck, GameEvent } from '../../../models/Game';
+import { AnswerCheck, GameEvent, Track } from '../../../models/Game';
 import { SET_FINAL_RESULTS } from '../../../config/actions/gameActions';
 
 const getRankingLabel = (user: User, index: number) => {
@@ -49,9 +49,13 @@ const Ranking: React.FC = () => {
       // @ts-ignore
       channel.listen(EVENTS.GAME_END, (event: GameEvent) => {
         setIsGameEnd(true);
-        setTimeout(() => {
+      });
+      // @ts-ignore
+      channel.listen(EVENTS.SONG_START, (event: Track) => {
+        // New game
+        if (event.order === 1) {
           setIsGameEnd(false);
-        }, event.duration);
+        }
       });
     }
   }, [channel]);
@@ -68,7 +72,8 @@ const Ranking: React.FC = () => {
         return user;
       });
 
-      setUsers(usersWithNewPoints);
+      // @ts-ignore
+      setUsers(usersWithNewPoints.sort((a, b) => ((a.score < b.score) ? 1 : -1)));
     }
   }, [answer]);
 
@@ -78,11 +83,19 @@ const Ranking: React.FC = () => {
       dispatch({ type: SET_FINAL_RESULTS, payload: users });
     } else {
       dispatch({ type: SET_FINAL_RESULTS, payload: [] });
+      resetScores();
     }
-  }, [isGameEnd, users]);
+  }, [isGameEnd]);
 
-  // @ts-ignore
-  users.sort((a, b) => ((a.score < b.score) ? 1 : -1));
+  const resetScores = () => {
+    setUsers(
+      users.map((u) => {
+        const user = { ...u };
+        user.score = 0;
+        return user;
+      }),
+    );
+  };
 
   return (
     <SideBloc title="Classement" right>

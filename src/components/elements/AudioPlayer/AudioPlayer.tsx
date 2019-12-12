@@ -30,14 +30,14 @@ const AudioPlayer: React.FC = () => {
         dispatch({ type: SET_MESSAGE, payload: 'Vous allez commencer à jouer dans un instant, préparez-vous !' });
         setOnComplete(() => fetchNextTrack);
         // TODO: Set to 40
-        setDuration(7);
+        setTimer(7);
       });
 
       // @ts-ignore
       channel.listen(EVENTS.GAME_START, (event: GameEvent) => {
         console.log('Game Start', event);
         dispatch({ type: SET_MESSAGE, payload: 'La partie commence dans un instant !' });
-        setDuration(event.duration / 1000);
+        setTimer(event.duration / 1000);
         setOnComplete(() => startGame);
       });
 
@@ -46,7 +46,7 @@ const AudioPlayer: React.FC = () => {
         console.log('Song Start', event);
         setTrack(event.track);
         setOnComplete(() => playTrack);
-        setDuration(event.pauseDuration);
+        setTimer(event.pauseDuration);
         dispatch({ type: SET_PAUSE });
         dispatch({ type: SET_TRACK, payload: event.track });
         dispatch({ type: SET_ORDER, payload: event.order });
@@ -65,8 +65,9 @@ const AudioPlayer: React.FC = () => {
 
       // @ts-ignore
       channel.listen(EVENTS.GAME_END, (event: GameEvent) => {
+        dispatch({ type: SET_PAUSE });
         setOnComplete(() => fetchNextTrack);
-        setDuration(event.duration);
+        setTimer(event.duration);
         console.log('Game End : ', event);
       });
     }
@@ -78,6 +79,12 @@ const AudioPlayer: React.FC = () => {
       player.src = track;
     }
   }, [player, track]);
+
+  // Reset duration because if the same duration set twice, timer doesn't refresh.
+  const setTimer = (time: number) => {
+    setDuration(0);
+    setDuration(time);
+  };
 
   const startGame = () => {
     fetchNextTrack();
@@ -98,7 +105,7 @@ const AudioPlayer: React.FC = () => {
         fetchNextTrack();
       }
       setOnComplete(() => fetchNextTrack);
-      setDuration(Math.trunc(player.duration));
+      setTimer(Math.trunc(player.duration));
       dispatch({ type: SET_PLAY });
     }
   };
@@ -110,7 +117,6 @@ const AudioPlayer: React.FC = () => {
         ref={(ref) => setPlayer(ref)}
         preload="metadata"
         className="hide"
-        // muted
       >
         <source src="https://cdns-preview-7.dzcdn.net/stream/c-78fed100d8c512d608dae53dee8eff1d-4.mp3" type="audio/mp3" />
         Your browser does not support the audio element.

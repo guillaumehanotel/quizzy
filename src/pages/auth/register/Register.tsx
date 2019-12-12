@@ -7,7 +7,7 @@ import { registerUser } from '../../../utils/requests';
 import { FormValidationError } from '../../../utils/errors';
 import { ROUTES } from '../../../config/routes';
 import { useUserDispatch } from '../../../providers/UserProvider';
-import Input from '../../../components/elements/Input/Input';
+import Input from '../../../components/forms/Input/Input';
 
 /**
  * Register form.

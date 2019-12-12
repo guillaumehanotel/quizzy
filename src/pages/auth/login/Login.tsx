@@ -9,7 +9,7 @@ import * as actions from '../../../config/actions/userActions';
 import { FormValidationError, UnauthorizedError } from '../../../utils/errors';
 import { User } from '../../../models/User';
 import { useUserDispatch } from '../../../providers/UserProvider';
-import Input from '../../../components/elements/Input/Input';
+import Input from '../../../components/forms/Input/Input';
 
 /**
  * Login form.
