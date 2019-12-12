@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import './Stats.scss';
 import {
-  VictoryLine, VictoryChart, VictoryAxis, VictoryZoomContainer,
-} from 'victory';
+  LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer,
+} from 'recharts';
 import { fetchStats } from '../../utils/requests';
 import { useUserState } from '../../providers/UserProvider';
-import { Stat, Game, ChartGame } from '../../models/Stat';
+import { Stat, ChartGame } from '../../models/Stat';
 
 /**
  * Statistique page.
@@ -29,15 +29,16 @@ const Stats: React.FC = () => {
         const reducer = (accumulator, currentValue) => accumulator + currentValue;
         const chartDates: string[] = stats.games.map((game) => {
           const gameDate = new Date(game.created_at);
-          return `${`${gameDate.getDay()}-${gameDate.getMonth()}-${gameDate.getFullYear()}`}`;
+          return `${`${gameDate.getDate()}-${gameDate.getMonth()}-${gameDate.getFullYear()}`}`;
         });
+        console.log(chartDates)
         // Set() creates a unique array
         const uniquesChartDates: string[] = [...new Set(chartDates)];
         for (const date of uniquesChartDates) {
           // Filtering games depending on their date
           const dateGames = stats.games.filter((game) => {
             const gameDate = new Date(game.created_at);
-            return `${`${gameDate.getDay()}-${gameDate.getMonth()}-${gameDate.getFullYear()}`}` === date;
+            return `${`${gameDate.getDate()}-${gameDate.getMonth()}-${gameDate.getFullYear()}`}` === date;
           });
           if (dateGames.length) {
             // Uses the reducer to add every game points to get the rounded average amount a point by day
@@ -45,11 +46,13 @@ const Stats: React.FC = () => {
             const gameDate = new Date(dateGames[0].created_at);
             const chartGame: ChartGame = {
               points: totalDayPoints,
-              date: `${gameDate.getDay()}/${gameDate.getMonth() + 1}/${gameDate.getFullYear()}`,
+              date: `${gameDate.getDate()}/${gameDate.getMonth() + 1}/${gameDate.getFullYear()}`,
             };
             games.push(chartGame);
           }
         }
+        // We're sorting the games by date in case we don't receive them in the good order
+        games.sort((a: ChartGame, b: ChartGame) => new Date(a.date).getTime() - new Date(b.date).getTime())
         setGraphDatas(games);
       }
       setStats(stats);
@@ -61,7 +64,7 @@ const Stats: React.FC = () => {
       <h1 className="center-align">Mes statistiques</h1>
       <div className="container">
         <div className="row">
-          <div className="col s5" style={{ overflow: 'auto' }}>
+          <div className="col m5 s12" style={{ overflow: 'auto' }}>
             {
               userStats !== null && Object.keys(userStats).length > 0 && userStats.games.length
                 ? (
@@ -103,36 +106,24 @@ const Stats: React.FC = () => {
           </div>
           {graphData !== null
             ? (
-              <div className="col s7" style={{ overflow: 'auto' }}>
+              <div className="col s12 m7" style={{ overflow: 'auto' }}>
                 <span className="average-score">Score moyen des parties par jour</span>
-                <VictoryChart
-                  domainPadding={20}
-                  containerComponent={(
-                    <VictoryZoomContainer
-                      zoomDomain={{ x: [0, 4] }}
-                      allowZoom={false}
-                    />
-                )}
-                >
-                  <VictoryAxis
-                    tickValues={graphData.map((val) => val.date)}
-                  />
-                  <VictoryAxis
-                    dependentAxis
-                    tickFormat={(x) => (`${x}`)}
-                  />
-                  <VictoryLine
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart
+                    width={500}
+                    height={300}
                     data={graphData}
-                    animate={{
-                      duration: 2000,
-                      onLoad: { duration: 1000 },
+                    margin={{
+                      top: 10, right: 10, left: 0, bottom: 10,
                     }}
-                    x="date"
-                    y="points"
-                    interpolation="cardinal"
-                    labels={graphData.map((val) => val.points)}
-                  />
-                </VictoryChart>
+
+                  >
+                    <XAxis dataKey="date" tickSize={15} tickLine={false}/>
+                    <YAxis domain={[0, 20]}/>
+                    <Tooltip />
+                    <Line type="monotone" dataKey="points" stroke="#FF9AA1" activeDot={{ r: 8 }} />
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
             )
             : null}
