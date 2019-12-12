@@ -7,10 +7,8 @@ import { Stat, Game, ChartGame } from '../../models/Stat';
 
 const Stats: React.FC = () => {
   const state = useUserState();
-  const [stats, setStats] = useState<Stat | null>(null);
+  const [userStats, setStats] = useState<Stat | null>(null);
   const [graphData, setGraphDatas] = useState<ChartGame[] | null>(null);
-  const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-    "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
 
   useEffect(() => {
     fetchUserStats();
@@ -19,7 +17,7 @@ const Stats: React.FC = () => {
   const fetchUserStats = async () => {
     if (state.user !== null && state.token !== null) {
       const stats: Stat | null = await fetchStats(state.user!['id'], state.token!)
-      if (stats !== null) {
+      if (stats !== null && typeof stats !== 'undefined') {
         const games: ChartGame[] = [];
         const reducer = (accumulator, currentValue) => accumulator + currentValue;
         const chartDates: string[] = stats.games.map((game) => {
@@ -56,7 +54,7 @@ const Stats: React.FC = () => {
         <div className="row">
           <div className="col s5" style={{overflow: 'scroll'}}>
             {
-              stats !== null && Object.keys(stats).length > 0
+              userStats !== null && Object.keys(userStats).length > 0
                 ?
                 <ul>
                   <li>

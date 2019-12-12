@@ -98,12 +98,11 @@ export async function sendAnswer(genreId: number | string, userId: number | unde
   handleApiErrors(response);
 }
 
-export async function fetchStats(id: string|number, token: string) {
+export async function fetchStats(id: number|undefined, token: string) {
   const response = await apiRequest(`${API_URL}/users/${id}/stats`, 'GET', null, token);
   if (response.status_code === 200) {
     return response.data;
   } else {
     return null;
   }
-  handleApiErrors(response);
 }
