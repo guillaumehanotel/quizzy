@@ -57,7 +57,6 @@ const GameInput: React.FC = () => {
     if (channel) {
       // @ts-ignore
       channel.listen(EVENTS.USER_RESPONSE, (event: AnswerCheck) => {
-        console.log('User response : ', event);
         if (event.userId === user!.id) {
           setAnswerCheck(event);
         }

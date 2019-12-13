@@ -29,13 +29,11 @@ const AudioPlayer: React.FC = () => {
       channel.here((channelUsers: User[]) => {
         dispatch({ type: SET_MESSAGE, payload: 'Vous allez commencer à jouer dans un instant, préparez-vous !' });
         setOnComplete(() => fetchNextTrack);
-        // TODO: Set to 40
-        setTimer(7);
+        setTimer(40);
       });
 
       // @ts-ignore
       channel.listen(EVENTS.GAME_START, (event: GameEvent) => {
-        console.log('Game Start', event);
         dispatch({ type: SET_MESSAGE, payload: 'La partie commence dans un instant !' });
         setTimer(event.duration / 1000);
         setOnComplete(() => startGame);
@@ -43,7 +41,6 @@ const AudioPlayer: React.FC = () => {
 
       // @ts-ignore
       channel.listen(EVENTS.SONG_START, (event: Track) => {
-        console.log('Song Start', event);
         setTrack(event.track);
         setOnComplete(() => playTrack);
         setTimer(event.pauseDuration);
@@ -59,7 +56,6 @@ const AudioPlayer: React.FC = () => {
 
       // @ts-ignore
       channel.listen(EVENTS.SONG_END, (event: Result) => {
-        console.log('Song End : ', event);
         dispatch({ type: ADD_SONG_TO_HISTORY, payload: event });
       });
 
@@ -68,7 +64,6 @@ const AudioPlayer: React.FC = () => {
         dispatch({ type: SET_PAUSE });
         setOnComplete(() => fetchNextTrack);
         setTimer(event.duration);
-        console.log('Game End : ', event);
       });
     }
   }, [channel]);

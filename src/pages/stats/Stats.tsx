@@ -25,13 +25,13 @@ const Stats: React.FC = () => {
       const stats: Stat | null = await fetchStats(state.user!.id, state.token!);
       if (stats !== null && typeof stats !== 'undefined') {
         const games: ChartGame[] = [];
-        // The reducer below is used to add two values from two different objects (game points) while being in a loop
+        // The reducer below is used to add two values from two different objects (game points)
+        // while being in a loop
         const reducer = (accumulator, currentValue) => accumulator + currentValue;
         const chartDates: string[] = stats.games.map((game) => {
           const gameDate = new Date(game.created_at);
           return `${`${gameDate.getDate()}-${gameDate.getMonth()}-${gameDate.getFullYear()}`}`;
         });
-        console.log(chartDates)
         // Set() creates a unique array
         const uniquesChartDates: string[] = [...new Set(chartDates)];
         for (const date of uniquesChartDates) {
@@ -41,8 +41,10 @@ const Stats: React.FC = () => {
             return `${`${gameDate.getDate()}-${gameDate.getMonth()}-${gameDate.getFullYear()}`}` === date;
           });
           if (dateGames.length) {
-            // Uses the reducer to add every game points to get the rounded average amount a point by day
-            const totalDayPoints = Math.round(dateGames.map((game) => game.points).reduce(reducer) / dateGames.length);
+            // Uses the reducer to add every game points
+            // to get the rounded average amount a point by day
+            const totalDayPoints = Math.round(dateGames.map((game) => game.points)
+              .reduce(reducer) / dateGames.length);
             const gameDate = new Date(dateGames[0].created_at);
             const chartGame: ChartGame = {
               points: totalDayPoints,
@@ -52,7 +54,8 @@ const Stats: React.FC = () => {
           }
         }
         // We're sorting the games by date in case we don't receive them in the good order
-        games.sort((a: ChartGame, b: ChartGame) => new Date(a.date).getTime() - new Date(b.date).getTime())
+        games.sort((a: ChartGame, b: ChartGame) => new Date(a.date)
+          .getTime() - new Date(b.date).getTime());
         setGraphDatas(games);
       }
       setStats(stats);
