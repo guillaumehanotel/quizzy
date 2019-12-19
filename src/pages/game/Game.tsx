@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Echo from 'laravel-echo';
 import { useUserState } from '../../providers/UserProvider';
-import { DEV_WEBSOCKET_URL } from '../../config/env';
+import { DEV_WEBSOCKET_URL, PRODUCTION_WEBSOCKET_URL } from '../../config/env';
 import { useGameDispatch } from '../../providers/GameProvider';
 import { SET_CHANNEL, SET_GENRE } from '../../config/actions/gameActions';
 import './Game.scss';
@@ -37,7 +37,7 @@ const Game: React.FC = () => {
     if (userState.token) {
       const echo = new Echo({
         broadcaster: 'socket.io',
-        host: DEV_WEBSOCKET_URL,
+        host: PRODUCTION_WEBSOCKET_URL,
         auth: {
           headers: {
             Authorization: `Bearer ${userState.token}`,
